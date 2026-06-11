@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -209,103 +209,157 @@
 
 <div id="app-container">
     <div class="header">
-        <div><i class="fa-solid fa-store" style="margin-right: 8px;"></i> হালাল শপ</div>
-        <button id="auth-btn" onclick="openAuthModal()">লগইন</button>
+        <div><i class="fa-solid fa-store" style="margin-right: 8px;"></i> Halal Shop</div>
+        <button id="auth-btn" onclick="openAuthModal()">Login</button>
     </div>
 
     <div id="toast-container"></div>
 
     <div class="main-content">
         <div id="home-screen" class="screen active">
-            <div class="section-title"><i class="fa-solid fa-fire"></i> জনপ্রিয় পণ্যসমূহ</div>
+            <div class="section-title"><i class="fa-solid fa-fire"></i> Popular Products</div>
             <div id="product-container" class="product-grid"></div>
         </div>
 
         <div id="cart-screen" class="screen">
-            <div class="section-title"><i class="fa-solid fa-basket-shopping"></i> আপনার শপিং কার্ট</div>
+            <div class="section-title"><i class="fa-solid fa-basket-shopping"></i> Your Shopping Cart</div>
             <div id="cart-container"></div>
             
             <div id="checkout-section" style="display: none;">
                 <div class="checkout-box">
-                    <div style="font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px;"><i class="fa-solid fa-location-dot" style="color: var(--primary);"></i> ডেলিভারি এরিয়া নির্বাচন করুন</div>
+                    <div style="font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px;"><i class="fa-solid fa-location-dot" style="color: var(--primary);"></i> Select Delivery Area</div>
                     <div class="auth-tabs" style="margin-bottom: 15px; padding: 4px;">
-                        <button class="auth-tab active" onclick="setDeliveryArea('inside')" id="del-inside" style="font-size: 13px;">সিরাজগঞ্জের ভিতরে (৳৭০)</button>
-                        <button class="auth-tab" onclick="setDeliveryArea('outside')" id="del-outside" style="font-size: 13px;">সিরাজগঞ্জের বাইরে (৳১৩০)</button>
+                        <button class="auth-tab active" onclick="setDeliveryArea('inside')" id="del-inside" style="font-size: 13px;">Inside Sirajganj (৳70)</button>
+                        <button class="auth-tab" onclick="setDeliveryArea('outside')" id="del-outside" style="font-size: 13px;">Outside Sirajganj (৳130)</button>
                     </div>
 
-                    <div style="font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; margin-top: 15px;"><i class="fa-solid fa-address-card" style="color: var(--primary);"></i> ডেলিভারি তথ্য প্রদান করুন</div>
-                    <input type="text" id="cust-name" class="custom-input" placeholder="গ্রাহকের নাম">
-                    <input type="tel" id="cust-phone" class="custom-input" placeholder="মোবাইল নম্বর">
-                    <textarea id="cust-address" class="custom-input" placeholder="পূর্ণাঙ্গ ঠিকানা (গ্রাম/মহল্লা, থানা, জেলা)" style="height: 80px; resize: none; font-family: inherit; padding-top: 12px;"></textarea>
+                    <div style="font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; margin-top: 15px;"><i class="fa-solid fa-address-card" style="color: var(--primary);"></i> Provide Delivery Information</div>
+                    <input type="text" id="cust-name" class="custom-input" placeholder="Customer Name">
+                    <input type="tel" id="cust-phone" class="custom-input" placeholder="Mobile Number">
+                    <textarea id="cust-address" class="custom-input" placeholder="Full Address (Village/Area, Thana, District)" style="height: 80px; resize: none; font-family: inherit; padding-top: 12px;"></textarea>
                     
                     <div style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 8px; font-size: 14px; color: var(--text-muted);">
-                        <span>সাবটোটাল:</span><span id="subtotal-price">৳ 0</span>
+                        <span>Subtotal:</span><span id="subtotal-price">৳ 0</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 12px; font-size: 14px; color: var(--text-muted); border-bottom: 1px dashed #E2E8F0; padding-bottom: 12px;">
-                        <span>ডেলিভারি চার্জ:</span><span id="delivery-charge-display">৳ 70</span>
+                        <span>Delivery Charge:</span><span id="delivery-charge-display">৳ 70</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; font-weight: 800; margin-bottom: 15px; font-size: 18px;">
-                        <span>সর্বমোট:</span><span id="total-price" style="color: var(--primary-dark);">৳ 0</span>
+                        <span>Total:</span><span id="total-price" style="color: var(--primary-dark);">৳ 0</span>
                     </div>
                     
-                    <button class="checkout-btn" onclick="processCheckout()">চেকআউট করুন <i class="fa-solid fa-arrow-right"></i></button>
+                    <button class="checkout-btn" onclick="processCheckout()">Checkout <i class="fa-solid fa-arrow-right"></i></button>
                 </div>
             </div>
         </div>
 
         <div id="profile-screen" class="screen">
-            <div class="section-title"><i class="fa-solid fa-user-shield"></i> আমার অ্যাকাউন্ট</div>
+            <div class="section-title"><i class="fa-solid fa-user-shield"></i> My Account</div>
             <div class="profile-card">
                 <img id="profile-pic" class="profile-pic" src="">
                 <i id="profile-icon" class="fa-solid fa-circle-user profile-icon"></i>
-                <h2 id="profile-name" style="margin-top: 10px; color: var(--text-main); font-weight: 800;">গেস্ট ইউজার</h2>
-                <p id="profile-email" style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px; font-weight: 500;">পণ্য কিনতে অনুগ্রহ করে লগইন করুন</p>
-                <button id="profile-auth-btn" class="checkout-btn" onclick="openAuthModal()">লগইন করুন</button>
+                <h2 id="profile-name" style="margin-top: 10px; color: var(--text-main); font-weight: 800;">Guest User</h2>
+                <p id="profile-email" style="color: var(--text-muted); margin-bottom: 25px; font-size: 14px; font-weight: 500;">Please login to purchase products</p>
+                <button id="profile-auth-btn" class="checkout-btn" onclick="openAuthModal()">Login</button>
             </div>
             
+            
+            
+            
+            
+            
+            
+            
+            
             <div id="order-history-section" style="display: none;">
-                <div class="order-history-title"><i class="fa-solid fa-clock-rotate-left"></i> আমার অর্ডারসমূহ</div>
+                <div class="order-history-title"><i class="fa-solid fa-clock-rotate-left"></i> My Orders</div>
                 <div id="order-list-container" class="order-list"></div>
             </div>
+            
+            
+            <!-- contact us -->
+      <div class="section-title" style="margin-top: 25px;"><i class="fa-solid fa-headset"></i> Support Center</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px;">
+    
+    <!-- WhatsApp Option -->
+    <div class="order-card" style="display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 15px;" onclick="window.open('https://wa.me/8801957329211', '_blank')">
+        <div style="background: #25D366; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+            <i class="fa-brands fa-whatsapp"></i>
+        </div>
+        <div>
+            <div style="font-weight: 800; color: var(--text-main);">Chat on WhatsApp</div>
+            <div style="font-size: 12px; color: var(--text-muted);">Reply within minutes</div>
         </div>
     </div>
 
+    <!-- Email Option -->
+    <div class="order-card" style="display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 15px;" onclick="window.location.href='mailto:imran.info.me@gmail.com'">
+        <div style="background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+            <i class="fa-solid fa-envelope"></i>
+        </div>
+        <div>
+            <div style="font-weight: 800; color: var(--text-main);">Email Support</div>
+            <div style="font-size: 12px; color: var(--text-muted);">Reply within 24 hours</div>
+        </div>
+    </div>
+    
+    
+    <!-- Email Option -->
+    <div class="order-card" style="display: flex; align-items: center; gap: 15px; cursor: pointer; padding: 15px;" onclick="window.location.href='mailto:imran.info.me@gmail.com'">
+        <div style="background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+            <i class="fa-brands fa-facebook"></i>
+        </div>
+        <div>
+            <div style="font-weight: 800; color: var(--text-main);">Facebook</div>
+            <div style="font-size: 12px; color: var(--text-muted);">connect every event</div>
+        </div>
+        </div>
+</div>
+
+            
+        </div>
+    </div>
+    
+    
+
+
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="switchScreen('home', this)"><i class="fa-solid fa-house"></i> হোম</div>
-        <div class="nav-item" onclick="switchScreen('cart', this)"><i class="fa-solid fa-cart-shopping"></i> কার্ট <span class="cart-badge" id="cart-count">0</span></div>
-        <div class="nav-item" onclick="switchScreen('profile', this)"><i class="fa-solid fa-user"></i> প্রোফাইল</div>
+        <div class="nav-item active" onclick="switchScreen('home', this)"><i class="fa-solid fa-house"></i> Home</div>
+        <div class="nav-item" onclick="switchScreen('cart', this)"><i class="fa-solid fa-cart-shopping"></i> Cart <span class="cart-badge" id="cart-count">0</span></div>
+        <div class="nav-item" onclick="switchScreen('profile', this)"><i class="fa-solid fa-user"></i> Profile</div>
     </div>
 
     <div id="auth-overlay" class="auth-overlay" onclick="closeAuthModal()"></div>
     <div id="auth-sheet" class="auth-sheet">
         <div class="auth-header">
-            <h3 id="auth-modal-title">লগইন করুন</h3>
+            <h3 id="auth-modal-title">Login</h3>
             <button class="close-btn" onclick="closeAuthModal()"><i class="fa-solid fa-xmark"></i></button>
         </div>
 
         <div class="auth-tabs">
-            <button class="auth-tab active" onclick="toggleAuthType('email')" id="tab-email">ইমেইল</button>
-            <button class="auth-tab" onclick="toggleAuthType('phone')" id="tab-phone">ফোন নম্বর</button>
+            <button class="auth-tab active" onclick="toggleAuthType('email')" id="tab-email">Email</button>
+            <button class="auth-tab" onclick="toggleAuthType('phone')" id="tab-phone">Phone Number</button>
         </div>
 
         <div id="email-section">
             <div id="email-login-form">
-                <input type="email" id="login-email" class="custom-input" placeholder="আপনার ইমেইল অ্যাড্রেস">
-                <input type="password" id="login-pass" class="custom-input" placeholder="পাসওয়ার্ড">
+                <input type="email" id="login-email" class="custom-input" placeholder="Your Email Address">
+                <input type="password" id="login-pass" class="custom-input" placeholder="Password">
                 <div style="text-align: right; margin-bottom: 20px;">
-                    <a href="#" onclick="openForgotPassModal()" style="font-size: 14px; color: var(--primary); text-decoration: none; font-weight: 700;">পাসওয়ার্ড ভুলে গেছেন?</a>
+                    <a href="#" onclick="openForgotPassModal()" style="font-size: 14px; color: var(--primary); text-decoration: none; font-weight: 700;">Forgot Password?</a>
                 </div>
-                <button class="checkout-btn" onclick="handleEmailLogin()">লগইন করুন</button>
-                <div class="toggle-auth-mode">অ্যাকাউন্ট নেই? <span onclick="toggleEmailMode('signup')">নতুন অ্যাকাউন্ট খুলুন</span></div>
+                <button class="checkout-btn" onclick="handleEmailLogin()">Login</button>
+                <div class="toggle-auth-mode">Don't have an account? <span onclick="toggleEmailMode('signup')">Create New Account</span></div>
             </div>
 
             <div id="email-signup-form" style="display: none;">
-                <input type="text" id="signup-name" class="custom-input" placeholder="আপনার পুরো নাম">
-                <input type="email" id="signup-email" class="custom-input" placeholder="ইমেইল অ্যাড্রেস">
-                <input type="password" id="signup-pass" class="custom-input" placeholder="পাসওয়ার্ড (কমপক্ষে ৮ অক্ষর)">
-                <input type="password" id="signup-confirm-pass" class="custom-input" placeholder="কনফার্ম পাসওয়ার্ড">
-                <button class="checkout-btn" style="margin-top: 5px;" onclick="handleEmailSignup()">সাইন আপ করুন</button>
-                <div class="toggle-auth-mode">আগে থেকেই অ্যাকাউন্ট আছে? <span onclick="toggleEmailMode('login')">লগইন করুন</span></div>
+                <input type="text" id="signup-name" class="custom-input" placeholder="Your Full Name">
+                <input type="email" id="signup-email" class="custom-input" placeholder="Email Address">
+                <input type="password" id="signup-pass" class="custom-input" placeholder="Password (At least 8 characters)">
+                <input type="password" id="signup-confirm-pass" class="custom-input" placeholder="Confirm Password">
+                <button class="checkout-btn" style="margin-top: 5px;" onclick="handleEmailSignup()">Sign Up</button>
+                <div class="toggle-auth-mode">Already have an account? <span onclick="toggleEmailMode('login')">Login</span></div>
             </div>
         </div>
 
@@ -316,72 +370,72 @@
                     <input type="tel" id="phone-input" class="custom-input" style="margin: 0;" placeholder="1XXXXXXXXX">
                 </div>
                 <div id="recaptcha-container" style="margin-top: 15px;"></div>
-                <button class="checkout-btn" style="margin-top: 20px;" onclick="sendOTP()">ওটিপি (OTP) পাঠান</button>
+                <button class="checkout-btn" style="margin-top: 20px;" onclick="sendOTP()">Send OTP</button>
             </div>
             <div id="otp-step" style="display: none;">
-                <input type="number" id="otp-input" class="custom-input" placeholder="৬-ডিজিটের কোড দিন">
-                <button class="checkout-btn" onclick="verifyOTP()">ভেরিফাই করুন</button>
+                <input type="number" id="otp-input" class="custom-input" placeholder="Enter 6-digit code">
+                <button class="checkout-btn" onclick="verifyOTP()">Verify</button>
             </div>
         </div>
 
-        <div class="divider"><span>অথবা যুক্ত হোন</span></div>
+        <div class="divider"><span>Or connect with</span></div>
         
         <button class="btn-google" onclick="handleGoogleLogin()">
             <img src="https://cdn-icons-png.flaticon.com/512/3002/3002219.png" width="24">
-            গুগল দিয়ে কন্টিনিউ করুন
+            Continue with Google
         </button>
     </div>
 
     <div id="payment-overlay" class="auth-overlay" onclick="closePaymentModal()"></div>
     <div id="payment-sheet" class="auth-sheet">
         <div class="auth-header">
-            <h3 id="payment-title">পেমেন্ট মেথড</h3>
+            <h3 id="payment-title">Payment Method</h3>
             <button class="close-btn" onclick="closePaymentModal()"><i class="fa-solid fa-xmark"></i></button>
         </div>
         
         <div class="payment-methods">
             <div class="payment-card active" onclick="selectPayment('Cash on Delivery')" id="card-cod">
-                <div class="payment-card-title"><i class="fa-solid fa-hand-holding-dollar" style="color:var(--primary); font-size:20px;"></i> ক্যাশ অন ডেলিভারি</div>
+                <div class="payment-card-title"><i class="fa-solid fa-hand-holding-dollar" style="color:var(--primary); font-size:20px;"></i> Cash on Delivery</div>
                 <div class="check-circle"></div>
             </div>
             <div class="payment-card" onclick="selectPayment('bKash')" id="card-bkash">
-                <div class="payment-card-title"><i class="fa-solid fa-mobile-screen-button" style="color:#E2136E; font-size:20px;"></i> বিকাশ পেমেন্ট</div>
+                <div class="payment-card-title"><i class="fa-solid fa-mobile-screen-button" style="color:#E2136E; font-size:20px;"></i> bKash Payment</div>
                 <div class="check-circle"></div>
             </div>
             <div class="payment-card" onclick="selectPayment('Nagad')" id="card-nagad">
-                <div class="payment-card-title"><i class="fa-solid fa-mobile-screen-button" style="color:#F7931E; font-size:20px;"></i> নগদ পেমেন্ট</div>
+                <div class="payment-card-title"><i class="fa-solid fa-mobile-screen-button" style="color:#F7931E; font-size:20px;"></i> Nagad Payment</div>
                 <div class="check-circle"></div>
             </div>
         </div>
 
         <div id="mobile-banking-details" class="payment-details">
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">নিচের নম্বরে সেন্ড মানি করে TX id দিন(Personal): <strong style="color: var(--text-main);">01334108089</strong></p>
-            <input type="text" id="trx-id" class="custom-input" placeholder="Transaction ID (TrxID) দিন" style="margin-bottom: 0;">
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">Send money to the number below and enter TrxID (Personal): <strong style="color: var(--text-main);">01334108089</strong></p>
+            <input type="text" id="trx-id" class="custom-input" placeholder="Enter Transaction ID (TrxID)" style="margin-bottom: 0;">
         </div>
 
         <div style="display: flex; justify-content: space-between; font-weight: 800; margin: 15px 0; font-size: 18px; padding-top: 10px; border-top: 1px solid #E2E8F0;">
-            <span>মোট পে করতে হবে:</span><span id="payment-total-price" style="color: var(--primary-dark);">৳ 0</span>
+            <span>Total Amount to Pay:</span><span id="payment-total-price" style="color: var(--primary-dark);">৳ 0</span>
         </div>
 
-        <button class="checkout-btn" onclick="confirmFinalOrder()">অর্ডার নিশ্চিত করুন <i class="fa-solid fa-check-circle"></i></button>
+        <button class="checkout-btn" onclick="confirmFinalOrder()">Confirm Order <i class="fa-solid fa-check-circle"></i></button>
     </div>
 
     <div id="smart-alert-overlay" class="smart-overlay" onclick="closeSmartAlert()"></div>
     <div id="smart-alert-box" class="smart-box">
         <div id="smart-alert-icon" class="smart-box-icon error-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
-        <h3 id="smart-alert-title">সতর্কতা</h3>
-        <p id="smart-alert-msg">মেসেজ</p>
-        <button class="checkout-btn" onclick="closeSmartAlert()">বুঝতে পেরেছি</button>
+        <h3 id="smart-alert-title">Warning</h3>
+        <p id="smart-alert-msg">Message</p>
+        <button class="checkout-btn" onclick="closeSmartAlert()">Got it</button>
     </div>
 
     <div id="forgot-pass-overlay" class="smart-overlay" onclick="closeForgotPassModal()"></div>
     <div id="forgot-pass-box" class="smart-box">
         <button class="close-btn" style="position: absolute; top: 18px; right: 18px;" onclick="closeForgotPassModal()"><i class="fa-solid fa-xmark"></i></button>
         <div class="smart-box-icon"><i class="fa-solid fa-unlock-keyhole"></i></div>
-        <h3>পাসওয়ার্ড রিসেট</h3>
-        <p>আপনার অ্যাকাউন্টের ইমেইল দিন, আমরা পাসওয়ার্ড রিসেট করার লিংক পাঠিয়ে দিবো।</p>
-        <input type="email" id="forgot-email-input" class="custom-input" placeholder="আপনার ইমেইল অ্যাড্রেস">
-        <button class="checkout-btn" onclick="processForgotPassword()">রিসেট লিংক পাঠান <i class="fa-solid fa-paper-plane"></i></button>
+        <h3>Reset Password</h3>
+        <p>Enter your account email, we will send you a password reset link.</p>
+        <input type="email" id="forgot-email-input" class="custom-input" placeholder="Your Email Address">
+        <button class="checkout-btn" onclick="processForgotPassword()">Send Reset Link <i class="fa-solid fa-paper-plane"></i></button>
     </div>
 
 </div>
@@ -485,15 +539,15 @@
 
     window.processForgotPassword = async function() {
         const email = document.getElementById('forgot-email-input').value;
-        if(!email) return showToast("অনুগ্রহ করে আপনার ইমেইল দিন", "error");
+        if(!email) return showToast("Please enter your email", "error");
         
         try {
             await sendPasswordResetEmail(auth, email);
             closeForgotPassModal();
-            showSmartAlert("সফল হয়েছে!", "পাসওয়ার্ড রিসেট লিংক আপনার ইমেইলে পাঠানো হয়েছে। দয়া করে ইনবক্স চেক করুন।", "email");
+            showSmartAlert("Success!", "Password reset link has been sent to your email. Please check your inbox.", "email");
         } catch (error) { 
             if(error.code === 'auth/user-not-found') {
-                showSmartAlert("অ্যাকাউন্ট নেই!", "এই ইমেইলে কোনো অ্যাকাউন্ট পাওয়া যায়নি। দয়া করে সঠিক ইমেইল দিন।", "error");
+                showSmartAlert("Account not found!", "No account found with this email. Please enter a correct email.", "error");
             } else {
                 showToast(translateError(error.code), "error"); 
             }
@@ -503,7 +557,7 @@
     // --- Auth Modal Logic ---
     window.openAuthModal = function() {
         if(currentUser) { 
-            signOut(auth).then(() => showToast("লগআউট সফল হয়েছে")); 
+            signOut(auth).then(() => showToast("Logout successful")); 
             return; 
         }
         document.getElementById('auth-overlay').classList.add('active');
@@ -530,21 +584,21 @@
         if(mode === 'signup') {
             document.getElementById('email-login-form').style.display = 'none';
             document.getElementById('email-signup-form').style.display = 'block';
-            title.innerText = 'নতুন অ্যাকাউন্ট খুলুন';
+            title.innerText = 'Create New Account';
         } else {
             document.getElementById('email-login-form').style.display = 'block';
             document.getElementById('email-signup-form').style.display = 'none';
-            title.innerText = 'লগইন করুন';
+            title.innerText = 'Login';
         }
     }
 
     // --- Error Translator ---
     function translateError(errCode) {
-        if(errCode.includes("email-already-in-use")) return "এই ইমেইল দিয়ে ইতিমধ্যে অ্যাকাউন্ট খোলা আছে।";
-        if(errCode.includes("invalid-credential") || errCode.includes("wrong-password")) return "ইমেইল বা পাসওয়ার্ড ভুল হয়েছে।";
-        if(errCode.includes("user-not-found")) return "এই ইমেইলে কোনো অ্যাকাউন্ট পাওয়া যায়নি।";
-        if(errCode.includes("invalid-phone-number")) return "ভুল ফোন নম্বর দেওয়া হয়েছে।";
-        return "কোথাও কোনো সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+        if(errCode.includes("email-already-in-use")) return "An account is already registered with this email.";
+        if(errCode.includes("invalid-credential") || errCode.includes("wrong-password")) return "Incorrect email or password.";
+        if(errCode.includes("user-not-found")) return "No account found for this email.";
+        if(errCode.includes("invalid-phone-number")) return "Incorrect phone number provided.";
+        return "Something went wrong. Please try again.";
     }
 
     function isStrongPassword(password) {
@@ -555,10 +609,10 @@
     window.handleGoogleLogin = async () => {
         try {
             await signInWithPopup(auth, googleProvider);
-            closeAuthModal(); showToast("গুগল লগইন সফল!");
+            closeAuthModal(); showToast("Google login successful!");
         } catch (error) { 
             if(error.code === 'auth/account-exists-with-different-credential' || error.code === 'auth/email-already-in-use') {
-                showSmartAlert("ইমেইলে অ্যাকাউন্ট বিদ্যমান!", "আপনি ইতিমধ্যে এই ইমেইলটি ব্যবহার করে একটি অ্যাকাউন্ট খুলেছেন। দয়া করে 'ইমেইল' অপশনে গিয়ে পাসওয়ার্ড দিয়ে লগইন করুন।", "email");
+                showSmartAlert("Account exists with this email!", "You already have an account with this email. Please login with your password in the 'Email' tab.", "email");
             } else {
                 showToast(translateError(error.code), "error"); 
             }
@@ -571,21 +625,21 @@
         const pass = document.getElementById('signup-pass').value;
         const confirmPass = document.getElementById('signup-confirm-pass').value;
         
-        if(!name || !email || !pass || !confirmPass) return showToast("সবগুলো তথ্য সঠিকভাবে দিন", "error");
-        if(pass !== confirmPass) return showToast("পাসওয়ার্ড দুটি মিলেনি। আবার চেষ্টা করুন।", "error");
+        if(!name || !email || !pass || !confirmPass) return showToast("Please provide all information correctly", "error");
+        if(pass !== confirmPass) return showToast("Passwords do not match. Please try again.", "error");
         
         if(!isStrongPassword(pass)) {
-            return showToast("পাসওয়ার্ডে অন্তত ৮টি অক্ষর, একটি বড় ও ছোট হাতের অক্ষর (A-z) এবং একটি সংখ্যা (0-9) থাকতে হবে।", "error");
+            return showToast("Password must contain at least 8 characters, one uppercase, one lowercase letter (A-z), and one number (0-9).", "error");
         }
         
         try {
             const methods = await fetchSignInMethodsForEmail(auth, email);
             if (methods.length > 0) {
                 if (methods.includes('google.com')) {
-                    showSmartAlert("গুগল অ্যাকাউন্ট বিদ্যমান!", "এই ইমেইল দিয়ে ইতিমধ্যে গুগল অ্যাকাউন্ট খোলা আছে। দয়া করে নিচে 'গুগল দিয়ে কন্টিনিউ করুন' বাটনে ক্লিক করে লগইন করুন।", "google");
+                    showSmartAlert("Google Account Exists!", "A Google account already exists with this email. Please login by clicking 'Continue with Google' below.", "google");
                     return;
                 } else if (methods.includes('password')) {
-                    showSmartAlert("অ্যাকাউন্ট বিদ্যমান!", "এই ইমেইল দিয়ে ইতিমধ্যে একটি অ্যাকাউন্ট খোলা আছে। দয়া করে লগইন করুন।", "email");
+                    showSmartAlert("Account Exists!", "An account is already registered with this email. Please login.", "email");
                     return;
                 }
             }
@@ -598,10 +652,10 @@
             await updateProfile(userCredential.user, { displayName: name });
             auth.updateCurrentUser(userCredential.user);
             
-            closeAuthModal(); showToast("আলহামদুলিল্লাহ! অ্যাকাউন্ট খোলা সফল।");
+            closeAuthModal(); showToast("Alhamdulillah! Account created successfully.");
         } catch (error) { 
             if (error.code === 'auth/email-already-in-use') {
-                showSmartAlert("অ্যাকাউন্ট বিদ্যমান!", "এই ইমেইল দিয়ে ইতিমধ্যে অ্যাকাউন্ট খোলা আছে। দয়া করে লগইন করুন বা গুগল দিয়ে চেষ্টা করুন।", "error");
+                showSmartAlert("Account Exists!", "An account already exists with this email. Please login or try with Google.", "error");
             } else {
                 showToast(translateError(error.code), "error"); 
             }
@@ -611,24 +665,24 @@
     window.handleEmailLogin = async () => {
         const email = document.getElementById('login-email').value;
         const pass = document.getElementById('login-pass').value;
-        if(!email || !pass) return showToast("ইমেইল ও পাসওয়ার্ড প্রদান করুন", "error");
+        if(!email || !pass) return showToast("Please provide email and password", "error");
 
         try {
             const methods = await fetchSignInMethodsForEmail(auth, email);
             if (methods.includes('google.com') && !methods.includes('password')) {
-                return showSmartAlert("গুগল অ্যাকাউন্ট!", "আপনি ইতিমধ্যে এই ইমেইল দিয়ে গুগল অ্যাকাউন্ট খুলেছেন। দয়া করে নিচে 'গুগল দিয়ে কন্টিনিউ করুন' বাটনে ক্লিক করে লগইন করুন।", "google");
+                return showSmartAlert("Google Account!", "You have already registered a Google account with this email. Please click 'Continue with Google' to login.", "google");
             }
         } catch(e) { }
 
         try {
             await signInWithEmailAndPassword(auth, email, pass);
-            closeAuthModal(); showToast("লগইন সফল হয়েছে!");
+            closeAuthModal(); showToast("Login successful!");
         } catch (error) { 
             if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
                 try {
                     const methods = await fetchSignInMethodsForEmail(auth, email);
                     if (methods.includes('google.com') && !methods.includes('password')) {
-                        return showSmartAlert("গুগল অ্যাকাউন্ট!", "আপনি ইতিমধ্যে এই ইমেইল দিয়ে গুগল অ্যাকাউন্ট খুলেছেন। দয়া করে নিচে 'গুগল দিয়ে কন্টিনিউ করুন' বাটনে ক্লিক করে লগইন করুন।", "google");
+                        return showSmartAlert("Google Account!", "You have already registered a Google account with this email. Please click 'Continue with Google' to login.", "google");
                     }
                 } catch(e){}
             }
@@ -638,7 +692,7 @@
 
     window.sendOTP = async () => {
         const phone = document.getElementById('phone-input').value;
-        if(phone.length !== 10 && phone.length !== 11) return showToast("সঠিক মোবাইল নম্বর দিন (যেমন: 017XXXXXXXX)", "error");
+        if(phone.length !== 10 && phone.length !== 11) return showToast("Please enter a valid mobile number (e.g., 017XXXXXXXX)", "error");
         
         const formatPhone = phone.startsWith('0') ? '+88' + phone : '+880' + phone;
 
@@ -647,25 +701,25 @@
         }
 
         try {
-            showToast("ওটিপি পাঠানো হচ্ছে...");
+            showToast("Sending OTP...");
             confirmationResult = await signInWithPhoneNumber(auth, formatPhone, window.recaptchaVerifier);
             document.getElementById('phone-input-step').style.display = 'none';
             document.getElementById('otp-step').style.display = 'block';
-            showToast("আপনার মোবাইলে ওটিপি পাঠানো হয়েছে!");
+            showToast("OTP sent to your mobile!");
         } catch (error) { 
-            showToast("ওটিপি পাঠাতে সমস্যা হচ্ছে। আবার চেষ্টা করুন।", "error"); 
+            showToast("Failed to send OTP. Please try again.", "error"); 
             console.error(error);
         }
     }
 
     window.verifyOTP = async () => {
         const code = document.getElementById('otp-input').value;
-        if(code.length < 6) return showToast("৬ ডিজিটের সঠিক কোড দিন", "error");
+        if(code.length < 6) return showToast("Please enter the correct 6-digit code", "error");
 
         try {
             await confirmationResult.confirm(code);
-            closeAuthModal(); showToast("ফোন ভেরিফিকেশন সফল!");
-        } catch (error) { showToast("ভুল ওটিপি কোড!", "error"); }
+            closeAuthModal(); showToast("Phone verification successful!");
+        } catch (error) { showToast("Invalid OTP code!", "error"); }
     }
 
     onAuthStateChanged(auth, (user) => {
@@ -676,12 +730,12 @@
 
         if (user) {
             const displayId = user.displayName || user.email || user.phoneNumber;
-            headerBtn.innerText = "লগআউট";
-            profileBtn.innerText = "লগআউট করুন";
+            headerBtn.innerText = "Logout";
+            profileBtn.innerText = "Logout";
             profileBtn.style.background = "var(--danger)";
             profileBtn.style.boxShadow = "0 6px 15px rgba(239, 68, 68, 0.3)";
             document.getElementById('profile-name').innerText = displayId;
-            document.getElementById('profile-email').innerText = user.email || "মোবাইল ইউজার";
+            document.getElementById('profile-email').innerText = user.email || "Mobile User";
             if(user.photoURL) {
                 document.getElementById('profile-icon').style.display = 'none';
                 document.getElementById('profile-pic').style.display = 'block';
@@ -701,12 +755,12 @@
                 document.getElementById('cust-phone').value = rawPhone;
             }
         } else {
-            headerBtn.innerText = "লগইন";
-            profileBtn.innerText = "লগইন করুন";
+            headerBtn.innerText = "Login";
+            profileBtn.innerText = "Login";
             profileBtn.style.background = "var(--primary)";
             profileBtn.style.boxShadow = "0 6px 15px rgba(16, 185, 129, 0.3)";
-            document.getElementById('profile-name').innerText = "গেস্ট ইউজার";
-            document.getElementById('profile-email').innerText = "পণ্য কিনতে অনুগ্রহ করে লগইন করুন";
+            document.getElementById('profile-name').innerText = "Guest User";
+            document.getElementById('profile-email').innerText = "Please login to purchase products";
             document.getElementById('profile-icon').style.display = 'block';
             document.getElementById('profile-pic').style.display = 'none';
             
@@ -734,7 +788,7 @@
                 container.innerHTML = `
                     <div style="text-align: center; color: var(--text-muted); padding: 30px 10px; font-weight: 600; font-size: 14px;">
                         <i class="fa-solid fa-box-open" style="font-size: 40px; color: #CBD5E1; display: block; margin-bottom: 10px;"></i>
-                        আপনি এখন পর্যন্ত কোনো অর্ডার করেননি!
+                        You haven't placed any orders yet!
                     </div>`;
                 return;
             }
@@ -751,11 +805,11 @@
                 let formattedDate = "N/A";
                 if(order.timestamp) {
                     const d = new Date(order.timestamp);
-                    formattedDate = d.toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' }) + " | " + d.toLocaleTimeString('bn-BD', { hour: '2-digit', minute: '2-digit' });
+                    formattedDate = d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) + " | " + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
                 }
                 
                 let statusClass = order.status === 'Pending' ? 'status-pending' : 'status-success';
-                let statusText = order.status === 'Pending' ? 'পেন্ডিং' : (order.status === 'Delivered' ? 'ডেলিভার্ড' : order.status);
+                let statusText = order.status === 'Pending' ? 'Pending' : (order.status === 'Delivered' ? 'Delivered' : order.status);
                 
                 let itemsHtml = '';
                 if(order.items && Array.isArray(order.items)) {
@@ -779,11 +833,11 @@
                                 ${itemsHtml}
                             </div>
                             <div style="display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;">
-                                <span>ডেলিভারি চার্জ (${order.deliveryArea || 'N/A'}):</span>
+                                <span>Delivery Charge (${order.deliveryArea || 'N/A'}):</span>
                                 <span>৳ ${order.deliveryCharge || 0}</span>
                             </div>
                             <div style="display: flex; justify-content: space-between; font-weight: 800; color: var(--text-main); font-size: 14px; margin-bottom: 2px;">
-                                <span>সর্বমোট মূল্য:</span>
+                                <span>Total Price:</span>
                                 <span style="color: var(--primary-dark);">৳ ${order.totalAmount || 0}</span>
                             </div>
                             <div class="order-meta-info">
@@ -815,7 +869,7 @@
         container.innerHTML = `
             <div style="grid-column: span 2; text-align: center; padding: 40px 10px;">
                 <i class="fa-solid fa-spinner fa-spin" style="font-size: 35px; color: var(--primary);"></i>
-                <p style="margin-top:15px; color: var(--text-muted); font-weight: 600; font-size: 14px;">প্রোডাক্ট খোঁজা হচ্ছে...</p>
+                <p style="margin-top:15px; color: var(--text-muted); font-weight: 600; font-size: 14px;">Searching for products...</p>
             </div>`;
 
         if(unsubscribeProducts) unsubscribeProducts();
@@ -827,8 +881,8 @@
                 container.innerHTML = `
                     <div style="grid-column: span 2; text-align: center; color: var(--text-muted); padding: 40px 10px;">
                         <i class="fa-solid fa-box-open" style="font-size: 40px; color: #CBD5E1; margin-bottom: 15px; display:block;"></i>
-                        <h3 style="font-size: 16px; font-weight: 700;">কোনো প্রোডাক্ট পাওয়া যায়নি!</h3>
-                        <p style="font-size: 13px; margin-top: 5px;">অ্যাডমিন প্যানেল থেকে প্রোডাক্ট যুক্ত করুন।</p>
+                        <h3 style="font-size: 16px; font-weight: 700;">No products found!</h3>
+                        <p style="font-size: 13px; margin-top: 5px;">Please add products from the admin panel.</p>
                     </div>`;
                 return;
             }
@@ -854,7 +908,7 @@
                         <div>
                             <div class="product-price">৳ ${p.price || 0}</div>
                             <button class="add-btn" onclick="addToCart('${p.id}', '${p.name ? p.name.replace(/'/g, "\\'") : 'Item'}', ${p.price || 0})">
-                                <i class="fa-solid fa-cart-plus"></i> যুক্ত করুন
+                                <i class="fa-solid fa-cart-plus"></i> Add
                             </button>
                         </div>
                     </div>`;
@@ -864,7 +918,7 @@
             container.innerHTML = `
                 <div style="grid-column: span 2; text-align: center; padding: 40px 10px;">
                     <i class="fa-solid fa-triangle-exclamation" style="font-size: 35px; color: var(--danger); margin-bottom: 10px; display:block;"></i>
-                    <p style="color: var(--danger); font-weight: 700;">প্রোডাক্ট লোড করতে সমস্যা হয়েছে!</p>
+                    <p style="color: var(--danger); font-weight: 700;">Problem loading products!</p>
                 </div>`;
         });
     }
@@ -872,11 +926,11 @@
     loadProductsFromFirestore();
 
     window.addToCart = function(id, name, price) {
-        if(!currentUser) { showToast("অনুগ্রহ করে আগে লগইন করুন", "error"); openAuthModal(); return; }
+        if(!currentUser) { showToast("Please login first", "error"); openAuthModal(); return; }
         const item = myCart.find(i => i.id === id);
         if(item) item.qty++; else myCart.push({ id, name, price, qty: 1 });
         localStorage.setItem('halalProMaxCart', JSON.stringify(myCart));
-        updateCartBadge(); showToast("কার্টে যুক্ত হয়েছে");
+        updateCartBadge(); showToast("Added to cart");
     }
 
     // কার্ট থেকে আইটেম রিমুভ করার ফাংশন
@@ -885,7 +939,7 @@
         localStorage.setItem('halalProMaxCart', JSON.stringify(myCart));
         updateCartBadge();
         renderCart();
-        showToast("পণ্যটি কার্ট থেকে মুছে ফেলা হয়েছে", "error");
+        showToast("Item removed from cart", "error");
     }
 
     function updateCartBadge() {
@@ -897,7 +951,7 @@
         const container = document.getElementById('cart-container');
         const checkoutSec = document.getElementById('checkout-section');
         if(myCart.length === 0) {
-            container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-basket-shopping"></i><h3>কার্ট ফাঁকা!</h3></div>`;
+            container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-basket-shopping"></i><h3>Cart is empty!</h3></div>`;
             checkoutSec.style.display = 'none'; return;
         }
         
@@ -908,7 +962,7 @@
             container.innerHTML += `<div class="cart-item" style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
                 <div style="flex: 1;">
                     <h4>${item.name}</h4>
-                    <p style="color:gray;font-size:13px; font-weight:600;">৳ ${item.price} x ${item.qty}টি</p>
+                    <p style="color:gray;font-size:13px; font-weight:600;">৳ ${item.price} x ${item.qty} pcs</p>
                 </div>
                 <div style="text-align: right; display: flex; align-items: center; gap: 12px;">
                     <div class="cart-item-price">৳ ${item.price * item.qty}</div>
@@ -946,8 +1000,8 @@
     }
 
     window.processCheckout = function() {
-        if(!currentUser) return showToast("অর্ডার করতে অনুগ্রহ করে লগইন করুন", "error");
-        if(myCart.length === 0) return showToast("আপনার কার্ট ফাঁকা!", "error");
+        if(!currentUser) return showToast("Please login to place an order", "error");
+        if(myCart.length === 0) return showToast("Your cart is empty!", "error");
         
         // ডেলিভারি ইনফরমেশন ভ্যালিডেশন
         const custName = document.getElementById('cust-name').value.trim();
@@ -955,10 +1009,10 @@
         const custAddress = document.getElementById('cust-address').value.trim();
         
         if(!custName || !custPhone || !custAddress) {
-            return showToast("অনুগ্রহ করে আপনার নাম, মোবাইল নম্বর এবং ঠিকানা সঠিকভাবে দিন", "error");
+            return showToast("Please provide your name, mobile number, and address correctly", "error");
         }
         if(custPhone.length < 11) {
-            return showToast("সভিক ১১ ডিজিটের মোবাইল নম্বর দিন", "error");
+            return showToast("Please enter a valid 11-digit mobile number", "error");
         }
         
         document.getElementById('payment-total-price').innerText = document.getElementById('total-price').innerText;
@@ -972,14 +1026,14 @@
     window.confirmFinalOrder = async function() {
         let trxId = document.getElementById('trx-id').value;
         if(window.selectedPaymentMethod !== 'Cash on Delivery' && trxId.trim() === '') {
-            return showToast("দয়া করে Transaction ID দিন", "error");
+            return showToast("Please enter Transaction ID", "error");
         }
 
         const custName = document.getElementById('cust-name').value.trim();
         const custPhone = document.getElementById('cust-phone').value.trim();
         const custAddress = document.getElementById('cust-address').value.trim();
 
-        showToast("অর্ডার প্রসেস হচ্ছে...");
+        showToast("Processing order...");
         closePaymentModal();
         
         try {
@@ -988,13 +1042,13 @@
             
             let subtotal = myCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
             let finalTotalAmount = subtotal + window.deliveryCharge;
-            let areaText = window.deliveryArea === 'inside' ? "সিরাজগঞ্জের ভিতরে" : "সিরাজগঞ্জের বাইরে";
+            let areaText = window.deliveryArea === 'inside' ? "Inside Sirajganj" : "Outside Sirajganj";
 
             await setDoc(orderDocRef, {
                 orderId: orderId,
                 userId: currentUser.uid,
-                userEmail: currentUser.email || "মোবাইল ইউজার",
-                userName: currentUser.displayName || "গেস্ট",
+                userEmail: currentUser.email || "Mobile User",
+                userName: currentUser.displayName || "Guest",
                 customerName: custName,
                 customerPhone: custPhone,
                 customerAddress: custAddress,
@@ -1009,7 +1063,7 @@
                 timestamp: new Date().toISOString()
             });
 
-            showToast("আলহামদুলিল্লাহ, অর্ডারটি ডেটাবেজে সফলভাবে জমা হয়েছে!");
+            showToast("Alhamdulillah, order successfully saved in database!");
             myCart = []; 
             localStorage.removeItem('halalProMaxCart');
             setTimeout(() => renderCart(), 1000); 
@@ -1017,7 +1071,7 @@
             
         } catch (error) {
             console.error("Firestore Error: ", error);
-            showToast("ডেটাবেজে সেভ হতে সমস্যা হয়েছে।", "error");
+            showToast("Failed to save in database.", "error");
         }
     }
 </script>
