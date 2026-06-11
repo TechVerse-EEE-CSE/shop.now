@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Set New Password | Shop Verse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght=400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #10B981; 
+            --primary-dark: #059669;
+            --primary-light: rgba(16, 185, 129, 0.15);
+            --bg-color: #F8FAFC;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --danger: #EF4444;
+            --glass-bg: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Hind Siliguri', sans-serif; -webkit-tap-highlight-color: transparent;}
+        
+        body { 
+            background-color: var(--bg-color);
+            color: var(--text-main); 
+            display: flex; justify-content: center; align-items: center;
+            height: 100dvh; overflow: hidden; 
+            position: relative;
+        }
+
+        /* Animated Background Shapes */
+        .bg-shape {
+            position: absolute; border-radius: 50%; filter: blur(60px); z-index: 0;
+            animation: float 10s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .shape-1 { width: 300px; height: 300px; background: rgba(16, 185, 129, 0.3); top: -10%; left: -10%; }
+        .shape-2 { width: 400px; height: 400px; background: rgba(5, 150, 105, 0.2); bottom: -10%; right: -10%; animation-delay: -5s; }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-30px) scale(1.1); }
+        }
+        
+        #app-container {
+            width: 100%; max-width: 420px; height: 100dvh; 
+            background: transparent; position: relative;
+            display: flex; flex-direction: column; z-index: 10;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            color: var(--primary-dark); padding: 20px 24px; display: flex;
+            justify-content: center; align-items: center; font-size: 1.5rem; font-weight: 800; z-index: 20; 
+            border-bottom: 1px solid var(--glass-border); letter-spacing: 0.5px;
+        }
+
+        .main-content { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; justify-content: center; }
+        
+        /* Main Card */
+        .checkout-box { 
+            background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            padding: 30px 24px; border-radius: 24px; box-shadow: var(--glass-shadow); 
+            border: 1px solid var(--glass-border); text-align: center;
+            animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUpFade { 
+            from { opacity: 0; transform: translateY(30px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .icon-wrapper {
+            background: linear-gradient(135deg, var(--primary-light), rgba(16, 185, 129, 0.05));
+            color: var(--primary); width: 70px; height: 70px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 30px;
+            margin: 0 auto 15px; border: 1px solid rgba(16, 185, 129, 0.2);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.1);
+        }
+
+        /* Inputs */
+        .input-group { position: relative; margin-bottom: 16px; }
+        .input-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; transition: 0.3s; }
+        
+        .toggle-password {
+            position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 16px; cursor: pointer; transition: 0.3s; padding: 5px;
+        }
+        .toggle-password:hover { color: var(--primary); }
+
+        .custom-input { 
+            width: 100%; padding: 14px 45px; background: rgba(255, 255, 255, 0.7); 
+            border: 1.5px solid rgba(226, 232, 240, 0.8); border-radius: 16px; font-size: 15px; outline: none; 
+            transition: all 0.3s ease; font-weight: 600; color: var(--text-main);
+        }
+        .custom-input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px var(--primary-light); }
+        .custom-input:focus ~ .input-icon { color: var(--primary); }
+        .custom-input::placeholder { color: #94A3B8; font-weight: 500; }
+
+        /* Real-time Requirements UI */
+        .password-requirements { text-align: left; margin: 5px 0 20px 10px; font-size: 13px; color: var(--text-muted); }
+        .req-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; transition: 0.3s; }
+        .req-item.valid { color: var(--primary-dark); font-weight: 700; }
+        .req-item i { font-size: 12px; }
+        .req-item i.fa-circle-check { color: var(--primary); }
+
+        /* Button */
+        .checkout-btn { 
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; width: 100%; padding: 16px; border: none; border-radius: 16px; font-size: 16px; font-weight: 700; 
+            cursor: pointer; box-shadow: 0 8px 20px rgba(16, 185, 129, 0.25); transition: all 0.3s ease; 
+        }
+        .checkout-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(16, 185, 129, 0.35); }
+        .checkout-btn:active:not(:disabled) { transform: scale(0.98); }
+        .checkout-btn:disabled { background: #CBD5E1; box-shadow: none; cursor: not-allowed; opacity: 0.7; }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; font-size: 15px; font-weight: 700; 
+            color: var(--text-muted); text-decoration: none; transition: 0.3s;
+        }
+        .back-link:hover { color: var(--primary); transform: translateX(-4px); }
+
+        /* Toasts & Modals */
+        #toast-container { position: absolute; top: 80px; left: 50%; transform: translateX(-50%); width: 90%; z-index: 300; display: flex; flex-direction: column; gap: 12px; }
+        .toast { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); color: white; padding: 16px 20px; border-radius: 16px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); animation: toastEnter 0.4s forwards; border: 1px solid rgba(255,255,255,0.1); }
+        .toast.error { background: rgba(239, 68, 68, 0.9); }
+        @keyframes toastEnter { from { opacity: 0; transform: translateY(-25px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        .smart-overlay { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); z-index: 199; display: none; opacity: 0; transition: 0.4s; }
+        .smart-overlay.active { display: block; opacity: 1; }
+
+        .smart-box {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -40%) scale(0.9);
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); width: 88%; max-width: 360px; padding: 35px 25px; border-radius: 28px; text-align: center;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.15); z-index: 200; opacity: 0; visibility: hidden; transition: all 0.4s; border: 1px solid rgba(255,255,255,0.8);
+        }
+        .smart-box.active { transform: translate(-50%, -50%) scale(1); opacity: 1; visibility: visible; }
+        .smart-box-icon { font-size: 42px; margin: 0 auto 20px; width: 85px; height: 85px; display: flex; justify-content: center; align-items: center; border-radius: 50%; background: linear-gradient(135deg, var(--primary-light), rgba(16,185,129,0.05)); color: var(--primary); }
+        .smart-box-icon.error-icon { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+        .smart-box h3 { font-size: 22px; font-weight: 800; color: var(--text-main); margin-bottom: 10px; }
+        .smart-box p { font-size: 15px; color: var(--text-muted); margin-bottom: 28px; font-weight: 600; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+<div class="bg-shape shape-1"></div>
+<div class="bg-shape shape-2"></div>
+
+<div id="app-container">
+    <div class="header">
+        <i class="fa-solid fa-store" style="margin-right: 10px; color: var(--primary);"></i> Shop Verse
+    </div>
+
+    <div id="toast-container"></div>
+
+    <div class="main-content">
+        <div class="checkout-box" id="reset-container">
+            <div class="icon-wrapper">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main); margin-bottom: 5px;">Secure Account</h2>
+            <p style="font-size: 14px; color: var(--text-muted); font-weight: 500; margin-bottom: 25px;">
+                Create a strong password to secure your account.
+            </p>
+
+            <form id="reset-form">
+                <div class="input-group">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input type="password" id="new-password" class="custom-input" placeholder="New password" required>
+                    <i class="fa-solid fa-eye toggle-password" data-target="new-password"></i>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-lock-open input-icon"></i>
+                    <input type="password" id="confirm-password" class="custom-input" placeholder="Confirm new password" required>
+                    <i class="fa-solid fa-eye toggle-password" data-target="confirm-password"></i>
+                </div>
+
+                <div class="password-requirements">
+                    <div class="req-item" id="req-len"><i class="fa-solid fa-circle-xmark"></i> At least 8 characters</div>
+                    <div class="req-item" id="req-up"><i class="fa-solid fa-circle-xmark"></i> At least 1 uppercase letter</div>
+                    <div class="req-item" id="req-low"><i class="fa-solid fa-circle-xmark"></i> At least 1 lowercase letter</div>
+                    <div class="req-item" id="req-num"><i class="fa-solid fa-circle-xmark"></i> At least 1 number</div>
+                    <div class="req-item" id="req-match"><i class="fa-solid fa-circle-xmark"></i> Passwords must match</div>
+                </div>
+                
+                <button type="submit" class="checkout-btn" id="submit-btn" disabled>
+                    <span id="btn-text">Save Password <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i></span>
+                    <i class="fa-solid fa-circle-notch fa-spin" id="loader" style="display: none; font-size: 18px;"></i>
+                </button>
+            </form>
+            
+            <a href="/index.html" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i> Back to shop
+            </a>
+        </div>
+    </div>
+
+    <div id="smart-alert-overlay" class="smart-overlay"></div>
+    <div id="smart-alert-box" class="smart-box">
+        <div id="smart-alert-icon" class="smart-box-icon"><i class="fa-solid fa-circle-check"></i></div>
+        <h3 id="smart-alert-title">Success</h3>
+        <p id="smart-alert-msg">Message</p>
+        <button class="checkout-btn" id="smart-alert-btn">Continue</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, confirmPasswordReset, verifyPasswordResetCode } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+    // 1. Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyD_2mcIc6bsva2zJiAJl9vBZCn_d7K4-2Y",
+        authDomain: "shopverse-signup.firebaseapp.com",
+        projectId: "shopverse-signup",
+        storageBucket: "shopverse-signup.firebasestorage.app",
+        messagingSenderId: "139812126519",
+        appId: "1:139812126519:web:30efeceee0b54a0a5964b2",
+        measurementId: "G-SRYF64JX3N"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // DOM Elements
+    const form = document.getElementById('reset-form');
+    const newPassInput = document.getElementById('new-password');
+    const confirmPassInput = document.getElementById('confirm-password');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const loader = document.getElementById('loader');
+
+    // 2. On-Load URL Validation (Check before user types)
+    const urlParams = new URLSearchParams(window.location.search);
+    const actionCode = urlParams.get('oobCode');
+
+    if (!actionCode) {
+        showSmartAlert("Invalid Link!", "The password reset link is missing. Request a new one.", "error", () => window.location.href='index.html');
+        disableInputs();
+    } else {
+        verifyPasswordResetCode(auth, actionCode).catch((error) => {
+            showSmartAlert("Expired Link", "This reset link has expired or been used.", "error", () => window.location.href='index.html');
+            disableInputs();
+        });
+    }
+
+    function disableInputs() {
+        newPassInput.disabled = true;
+        confirmPassInput.disabled = true;
+        submitBtn.disabled = true;
+    }
+
+    // 3. Password Show/Hide Toggle Logic (Smart Implementation)
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', function() {
+            const targetInput = document.getElementById(this.getAttribute('data-target'));
+            if(targetInput.type === 'password') {
+                targetInput.type = 'text';
+                this.classList.replace('fa-eye', 'fa-eye-slash');
+                this.style.color = 'var(--primary)';
+            } else {
+                targetInput.type = 'password';
+                this.classList.replace('fa-eye-slash', 'fa-eye');
+                this.style.color = 'var(--text-muted)';
+            }
+        });
+    });
+
+    // 4. Real-time Password Validation Tracker
+    function checkRequirements() {
+        const pass = newPassInput.value;
+        const confirmPass = confirmPassInput.value;
+
+        // Conditions
+        const isLen = pass.length >= 8;
+        const isUp = /[A-Z]/.test(pass);
+        const isLow = /[a-z]/.test(pass);
+        const isNum = /\d/.test(pass);
+        const isMatch = (pass === confirmPass) && pass.length > 0;
+
+        // Update UI Function
+        const updateReqUI = (id, isValid) => {
+            const el = document.getElementById(id);
+            const icon = el.querySelector('i');
+            if (isValid) {
+                el.classList.add('valid');
+                icon.className = "fa-solid fa-circle-check";
+            } else {
+                el.classList.remove('valid');
+                icon.className = "fa-solid fa-circle-xmark";
+            }
+        };
+
+        updateReqUI('req-len', isLen);
+        updateReqUI('req-up', isUp);
+        updateReqUI('req-low', isLow);
+        updateReqUI('req-num', isNum);
+        updateReqUI('req-match', isMatch);
+
+        // Enable button only if ALL conditions are met
+        submitBtn.disabled = !(isLen && isUp && isLow && isNum && isMatch);
+    }
+
+    newPassInput.addEventListener('input', checkRequirements);
+    confirmPassInput.addEventListener('input', checkRequirements);
+
+    // 5. Final Form Submission
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        btnText.style.display = 'none';
+        loader.style.display = 'inline-block';
+        submitBtn.disabled = true;
+
+        try {
+            await confirmPasswordReset(auth, actionCode, newPassInput.value);
+            showSmartAlert("Password Updated!", "Your password has been reset successfully. You can now login.", "success", () => window.location.href = 'index.html');
+            form.reset();
+        } catch (error) {
+            let errorMsg = "Something went wrong. Please try again.";
+            if(error.code === 'auth/invalid-action-code') {
+                errorMsg = "This reset link has expired. Please request a new one.";
+            } else if(error.code === 'auth/weak-password') {
+                errorMsg = "Your password is too weak. Try a different one.";
+            }
+            showSmartAlert("Action Failed", errorMsg, "error", closeSmartAlert);
+        } finally {
+            btnText.style.display = 'inline-block';
+            loader.style.display = 'none';
+            // Button stays disabled until inputs trigger validation again
+            checkRequirements(); 
+        }
+    });
+
+    // 6. UI Helpers (Scoped correctly)
+    function showToast(msg, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> ${msg}`;
+        container.appendChild(toast);
+        setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(-20px) scale(0.9)'; setTimeout(() => toast.remove(), 400); }, 3500);
+    }
+
+    function showSmartAlert(title, msg, type, callback) {
+        document.getElementById('smart-alert-title').innerText = title;
+        document.getElementById('smart-alert-msg').innerText = msg;
+        
+        const iconBox = document.getElementById('smart-alert-icon');
+        iconBox.className = 'smart-box-icon'; 
+        const btn = document.getElementById('smart-alert-btn');
+
+        if(type === 'success') {
+            iconBox.innerHTML = '<i class="fa-solid fa-check"></i>';
+            btn.innerHTML = 'Continue to Login <i class="fa-solid fa-arrow-right" style="margin-left:5px;"></i>';
+        } else {
+            iconBox.classList.add('error-icon');
+            iconBox.innerHTML = '<i class="fa-solid fa-exclamation"></i>';
+            btn.innerHTML = 'Try Again / Close';
+        }
+
+        btn.onclick = callback;
+        document.getElementById('smart-alert-overlay').classList.add('active');
+        document.getElementById('smart-alert-box').classList.add('active');
+    }
+
+    function closeSmartAlert() {
+        document.getElementById('smart-alert-overlay').classList.remove('active');
+        document.getElementById('smart-alert-box').classList.remove('active');
+    }
+</script>
+</body>
+</html>
