@@ -75,7 +75,7 @@
         .product-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
         .product-price { font-size: 17px; color: var(--primary-dark); font-weight: 800; margin-bottom: 12px; }
         .add-btn { background: rgba(16, 185, 129, 0.1); color: var(--primary-dark); border: 1px solid var(--primary); width: 100%; padding: 10px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .add-btn:active { background: var(--primary); color: white; }
+        .add-btn:not(:disabled):active { background: var(--primary); color: white; }
 
         /* Bottom Nav */
         .bottom-nav {
@@ -980,9 +980,13 @@
                         </div>
                         <div>
                             <div class="product-price">৳ ${p.price || 0}</div>
-                            <button class="add-btn" onclick="addToCart('${p.id}', '${p.name ? p.name.replace(/'/g, "\\'") : 'Item'}', ${p.price || 0})">
+                            ${p.stock === 'Out of Stock' ? 
+                            `<button class="add-btn" disabled style="background: #F1F5F9; color: #94A3B8; border-color: #E2E8F0; cursor: not-allowed; box-shadow: none;">
+                                <i class="fa-solid fa-ban"></i> Stock Out
+                            </button>` : 
+                            `<button class="add-btn" onclick="addToCart('${p.id}', '${p.name ? p.name.replace(/'/g, "\\'") : 'Item'}', ${p.price || 0})">
                                 <i class="fa-solid fa-cart-plus"></i> Add
-                            </button>
+                            </button>`}
                         </div>
                     </div>`;
             });
