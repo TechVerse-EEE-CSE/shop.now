@@ -204,7 +204,7 @@
         .order-item-line { display: flex; justify-content: space-between; color: var(--text-main); font-weight: 600; font-size: 13px; margin-bottom: 4px; }
         .order-meta-info { font-size: 12px; color: var(--text-muted); margin-top: 8px; display: flex; justify-content: space-between; font-weight: 600; padding-top: 8px; border-top: 1px dashed #F1F5F9; }
 
-        /* NEW ADDITIONS FOR CART QUANTITY & ANIMATION */
+        /* Quantity & Animation */
         @keyframes popAnimation {
             0% { transform: scale(1); }
             50% { transform: scale(1.4); background-color: var(--primary); border-color: var(--primary); }
@@ -215,6 +215,15 @@
         .qty-btn { background: white; border: none; width: 22px; height: 22px; border-radius: 5px; cursor: pointer; color: var(--text-main); box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .qty-btn:active { transform: scale(0.85); background: var(--primary); color: white;}
         .qty-text { font-size: 13px; font-weight: 800; width: 18px; text-align: center; color: var(--text-main); }
+
+        /* NEW: Voucher System Styling */
+        .voucher-container { display: flex; gap: 8px; margin-bottom: 15px; margin-top: 5px; }
+        .voucher-input { flex: 1; padding: 12px 15px; border: 1.5px solid #E2E8F0; border-radius: 12px; font-size: 14px; font-weight: 700; text-transform: uppercase; outline: none; transition: 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+        .voucher-input:focus { border-color: var(--primary); }
+        .voucher-btn { background: var(--text-main); color: white; padding: 0 18px; border: none; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-sm); }
+        .voucher-btn:active { transform: scale(0.95); }
+        .discount-row { display: none; justify-content: space-between; font-weight: 700; margin-bottom: 8px; font-size: 14px; color: var(--danger); animation: slideIn 0.3s; }
+        .discount-row.active { display: flex; }
     </style>
 </head>
 <body>
@@ -250,9 +259,20 @@
                     <input type="tel" id="cust-phone" class="custom-input" placeholder="Mobile Number">
                     <textarea id="cust-address" class="custom-input" placeholder="Full Address (Village/Area, Thana, District)" style="height: 80px; resize: none; font-family: inherit; padding-top: 12px;"></textarea>
                     
+                    <div style="font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; margin-top: 15px;"><i class="fa-solid fa-ticket" style="color: var(--primary);"></i> Apply Voucher</div>
+                    <div class="voucher-container">
+                        <input type="text" id="voucher-input" class="voucher-input" placeholder="Enter code" oninput="this.value = this.value.toUpperCase()">
+                        <button id="voucher-btn" class="voucher-btn" onclick="handleVoucherAction()">Apply</button>
+                    </div>
+
                     <div style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 8px; font-size: 14px; color: var(--text-muted);">
                         <span>Subtotal:</span><span id="subtotal-price">৳ 0</span>
                     </div>
+                    
+                    <div id="discount-row" class="discount-row">
+                        <span>Discount (10%):</span><span id="discount-display">- ৳ 0</span>
+                    </div>
+
                     <div style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 12px; font-size: 14px; color: var(--text-muted); border-bottom: 1px dashed #E2E8F0; padding-bottom: 12px;">
                         <span>Delivery Charge:</span><span id="delivery-charge-display">৳ 70</span>
                     </div>
@@ -466,7 +486,6 @@
         measurementId: "G-SRYF64JX3N"
     };
     
-
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
@@ -479,9 +498,14 @@
     let unsubscribeOrders = null;
     let unsubscribeProducts = null;
 
-    // --- Delivery Variables & Logic ---
+    // --- Delivery & Voucher Variables ---
     window.deliveryArea = 'inside';
     window.deliveryCharge = 70;
+    
+    // NEW: Voucher State Variables
+    let appliedVoucher = null;
+    let discountAmount = 0;
+    let hasUsedVoucher = false; 
 
     window.setDeliveryArea = function(area) {
         window.deliveryArea = area;
@@ -651,9 +675,7 @@
                     return;
                 }
             }
-        } catch (e) {
-            // Fallback gracefully 
-        }
+        } catch (e) { }
         
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
@@ -753,7 +775,6 @@
             if(orderSec) orderSec.style.display = 'block';
             listenToUserOrders(user.uid);
 
-            // ফরম ফিল্ডে অটো ফিল করা (যদি আগে থেকে খালি থাকে)
             if (document.getElementById('cust-name') && !document.getElementById('cust-name').value) {
                 document.getElementById('cust-name').value = user.displayName || '';
             }
@@ -772,14 +793,20 @@
             document.getElementById('profile-icon').style.display = 'block';
             document.getElementById('profile-pic').style.display = 'none';
             
+            // Reset Voucher info on logout
+            hasUsedVoucher = false;
+            appliedVoucher = null;
+            discountAmount = 0;
+            if(document.getElementById('voucher-input')) document.getElementById('voucher-input').value = '';
+
             if(orderSec) orderSec.style.display = 'none';
             if(unsubscribeOrders) { unsubscribeOrders(); unsubscribeOrders = null; }
             document.getElementById('order-list-container').innerHTML = '';
 
-            // ফরম ফিল্ড খালি করা
             if (document.getElementById('cust-name')) document.getElementById('cust-name').value = '';
             if (document.getElementById('cust-phone')) document.getElementById('cust-phone').value = '';
             if (document.getElementById('cust-address')) document.getElementById('cust-address').value = '';
+            renderCart(); // Update cart UI for guest
         }
     });
 
@@ -792,6 +819,8 @@
             const container = document.getElementById('order-list-container');
             if(!container) return;
             
+            hasUsedVoucher = false; // Reset before checking
+            
             if(snapshot.empty) {
                 container.innerHTML = `
                     <div style="text-align: center; color: var(--text-muted); padding: 30px 10px; font-weight: 600; font-size: 14px;">
@@ -803,9 +832,14 @@
             
             let ordersArray = [];
             snapshot.forEach(doc => {
-                ordersArray.push({ id: doc.id, ...doc.data() });
+                let data = { id: doc.id, ...doc.data() };
+                ordersArray.push(data);
+                if(data.voucherCode === 'SHOPVERSE') hasUsedVoucher = true;
             });
             
+            // Backup save in local storage
+            if(hasUsedVoucher) localStorage.setItem(`used_voucher_${uid}`, 'true');
+
             ordersArray.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
             
             container.innerHTML = '';
@@ -829,6 +863,15 @@
                             </div>`;
                     });
                 }
+
+                let discountHtml = '';
+                if(order.discountAmount > 0) {
+                    discountHtml = `
+                    <div style="display: flex; justify-content: space-between; font-size: 13px; color: var(--danger); margin-bottom: 4px; font-weight: 700;">
+                        <span>Discount (${order.voucherCode}):</span>
+                        <span>- ৳ ${order.discountAmount}</span>
+                    </div>`;
+                }
                 
                 container.innerHTML += `
                     <div class="order-card">
@@ -844,6 +887,7 @@
                                 <span>Delivery Charge (${order.deliveryArea || 'N/A'}):</span>
                                 <span>৳ ${order.deliveryCharge || 0}</span>
                             </div>
+                            ${discountHtml}
                             <div style="display: flex; justify-content: space-between; font-weight: 800; color: var(--text-main); font-size: 14px; margin-bottom: 2px;">
                                 <span>Total Price:</span>
                                 <span style="color: var(--primary-dark);">৳ ${order.totalAmount || 0}</span>
@@ -871,7 +915,6 @@
         if(screenName === 'cart') renderCart();
     }
 
-    // --- নতুন প্রোডাক্ট ডিটেইলস পপ-আপ লজিক ---
     window.openProductModal = function(name, desc, imgUrl, iconClass, price) {
         document.getElementById('pm-title').innerText = name;
         document.getElementById('pm-desc').innerText = desc || 'কোনো বিবরণ দেওয়া নেই।';
@@ -928,7 +971,6 @@
                     mediaHtml = `<i class="${p.icon || 'fa-solid fa-box'} product-img"></i>`;
                 }
 
-                // এখানে কার্ডের ওপরের অংশে ক্লিক ইভেন্ট যোগ করা হয়েছে
                 container.innerHTML += `
                     <div class="product-card">
                         <div onclick="openProductModal('${p.name ? p.name.replace(/'/g, "\\'") : 'Item'}', '${p.desc ? p.desc.replace(/'/g, "\\'").replace(/\n/g, "\\n") : ''}', '${p.imageUrl || p.image || ''}', '${p.icon || 'fa-solid fa-box'}', ${p.price || 0})" style="cursor: pointer;">
@@ -964,7 +1006,6 @@
         updateCartBadge(); showToast("Added to cart");
     }
 
-    // কার্ট থেকে আইটেম রিমুভ করার ফাংশন
     window.removeFromCart = function(id) {
         myCart = myCart.filter(item => item.id !== id);
         localStorage.setItem('halalProMaxCart', JSON.stringify(myCart));
@@ -973,7 +1014,6 @@
         showToast("Item removed from cart", "error");
     }
 
-    // NEW ADDITION: Quantity Control Functions
     window.increaseQty = function(id) {
         const item = myCart.find(i => i.id === id);
         if(item) { item.qty++; }
@@ -992,19 +1032,44 @@
         }
     }
 
-    // MODIFIED: Added Push-and-Pop Animation to Cart Badge
     function updateCartBadge() {
         const badge = document.getElementById('cart-count');
         badge.innerText = myCart.reduce((sum, item) => sum + item.qty, 0);
-        
-        // Trigger Pop Animation
         badge.classList.remove('pop-anim');
-        void badge.offsetWidth; // trigger DOM reflow
+        void badge.offsetWidth; 
         badge.classList.add('pop-anim');
     }
     updateCartBadge();
 
-    // MODIFIED: Render Cart function now includes Quantity Controls
+    // NEW: Handle Voucher Action (Apply / Remove)
+    window.handleVoucherAction = function() {
+        if(!currentUser) return showToast("Please login to apply voucher", "error");
+        
+        // If already applied, Remove it
+        if(appliedVoucher === 'SHOPVERSE') {
+            appliedVoucher = null;
+            document.getElementById('voucher-input').value = '';
+            showToast("Voucher removed", "error");
+            renderCart();
+            return;
+        }
+
+        // Apply Logic
+        const code = document.getElementById('voucher-input').value.trim().toUpperCase();
+        if(!code) return showToast("Please enter a voucher code", "error");
+        if(code !== 'SHOPVERSE') return showToast("Invalid voucher code", "error");
+        
+        const storageKey = `used_voucher_${currentUser.uid}`;
+        if(localStorage.getItem(storageKey) === 'true' || hasUsedVoucher) {
+            return showSmartAlert("Offer Claimed!", "You have already claimed this 10% discount for a previous order.", "error");
+        }
+        
+        appliedVoucher = 'SHOPVERSE';
+        showToast("Voucher applied! 10% Discount added.");
+        renderCart();
+    }
+
+    // MODIFIED: Render Cart to include Discount
     window.renderCart = function() {
         const container = document.getElementById('cart-container');
         const checkoutSec = document.getElementById('checkout-section');
@@ -1036,7 +1101,29 @@
             </div>`;
         });
         
-        let finalTotal = subtotal + window.deliveryCharge;
+        // NEW: Calculate Discount
+        if(appliedVoucher === 'SHOPVERSE') {
+            discountAmount = Math.round(subtotal * 0.10); // 10% Discount
+            document.getElementById('discount-row').classList.add('active');
+            document.getElementById('discount-display').innerText = `- ৳ ${discountAmount}`;
+            
+            // Transform Apply to Remove button
+            const vBtn = document.getElementById('voucher-btn');
+            document.getElementById('voucher-input').disabled = true;
+            vBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Remove';
+            vBtn.style.background = 'var(--danger)';
+        } else {
+            discountAmount = 0;
+            document.getElementById('discount-row').classList.remove('active');
+            
+            // Reset to Apply button
+            const vBtn = document.getElementById('voucher-btn');
+            document.getElementById('voucher-input').disabled = false;
+            vBtn.innerHTML = 'Apply';
+            vBtn.style.background = 'var(--text-main)';
+        }
+
+        let finalTotal = subtotal + window.deliveryCharge - discountAmount;
         
         document.getElementById('subtotal-price').innerText = `৳ ${subtotal}`;
         document.getElementById('delivery-charge-display').innerText = `৳ ${window.deliveryCharge}`;
@@ -1064,12 +1151,10 @@
         }
     }
 
-    // MODIFIED: Added RegEx validation for BD phone numbers
     window.processCheckout = function() {
         if(!currentUser) return showToast("Please login to place an order", "error");
         if(myCart.length === 0) return showToast("Your cart is empty!", "error");
         
-        // ডেলিভারি ইনফরমেশন ভ্যালিডেশন
         const custName = document.getElementById('cust-name').value.trim();
         const custPhone = document.getElementById('cust-phone').value.trim();
         const custAddress = document.getElementById('cust-address').value.trim();
@@ -1078,7 +1163,6 @@
             return showToast("Please provide your name, mobile number, and address correctly", "error");
         }
         
-        // RegEx Check for BD Phone Number (01XXXXXXXXX / +8801XXXXXXXXX)
         const phoneRegex = /^(?:\+88|88)?(01[3-9]\d{8})$/;
         if(!phoneRegex.test(custPhone)) {
             return showToast("Please enter a valid BD mobile number (e.g., 017XXXXXXXX)", "error");
@@ -1110,7 +1194,10 @@
             const orderDocRef = doc(db, "orders", orderId);
             
             let subtotal = myCart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            let finalTotalAmount = subtotal + window.deliveryCharge;
+            
+            // Recalculate to be safe
+            let currentDiscountAmount = appliedVoucher === 'SHOPVERSE' ? Math.round(subtotal * 0.10) : 0;
+            let finalTotalAmount = subtotal + window.deliveryCharge - currentDiscountAmount;
             let areaText = window.deliveryArea === 'inside' ? "Inside Sirajganj" : "Outside Sirajganj";
 
             await setDoc(orderDocRef, {
@@ -1123,6 +1210,8 @@
                 customerAddress: custAddress,
                 items: myCart,
                 subtotal: subtotal,
+                discountAmount: currentDiscountAmount, // NEW
+                voucherCode: appliedVoucher || "None", // NEW
                 deliveryCharge: window.deliveryCharge,
                 deliveryArea: areaText,
                 totalAmount: finalTotalAmount,
@@ -1131,6 +1220,17 @@
                 status: "Pending",
                 timestamp: new Date().toISOString()
             });
+
+            // NEW: Mark voucher as used permanently
+            if(appliedVoucher === 'SHOPVERSE') {
+                localStorage.setItem(`used_voucher_${currentUser.uid}`, 'true');
+                hasUsedVoucher = true;
+            }
+
+            // Reset voucher state
+            appliedVoucher = null;
+            discountAmount = 0;
+            document.getElementById('voucher-input').value = '';
 
             showToast("Alhamdulillah, order successfully saved in database!");
             myCart = []; 
