@@ -7,6 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght=400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
         :root {
             --primary: #10B981; 
@@ -616,6 +618,7 @@
             </div>
         `).join('') : 'No items found';
 
+        // --- Modified to include the download button at the bottom ---
         contentContainer.innerHTML = `
             <div class="details-item"><div class="details-label">Order ID:</div><div class="details-value" style="color:var(--primary-dark)">${order.orderId || order.id}</div></div>
             <div class="details-item"><div class="details-label">Customer Name:</div><div class="details-value">${order.customerName || order.userName || 'Guest User'}</div></div>
@@ -632,12 +635,68 @@
             <div style="margin-top:20px; text-align:right; font-size:18px; font-weight:800; border-top:2px solid #F1F5F9; padding-top:12px;">
                 Total Amount: <span style="color:var(--primary-dark)">৳ ${order.totalAmount}</span>
             </div>
+
+            <div style="margin-top:30px; display:flex; justify-content:center;">
+                <button class="btn-primary" style="width: 100%; max-width: 350px; padding: 14px 20px; background: #3B82F6; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); font-size: 15px; border-radius: 50px;" onclick="downloadOrderReceipt('${order.orderId || order.id}')">
+                    <i class="fa-solid fa-cloud-arrow-down" style="font-size: 18px;"></i> download
+                </button>
+            </div>
         `;
         document.getElementById('order-details-modal').classList.add('active');
     }
 
     window.closeOrderDetailsModal = function() {
         document.getElementById('order-details-modal').classList.remove('active');
+    }
+
+    // ---   Image Download Logic ---
+    window.downloadOrderReceipt = function(orderId) {
+        const element = document.getElementById('order-details-content');
+        showToast("photo generate..."); 
+        
+        // Save original styles to restore them later
+        const originalBackground = element.style.background;
+        const originalPadding = element.style.padding;
+        const originalBorderRadius = element.style.borderRadius;
+        
+        // Add white background specifically for the screenshot so it looks clean
+        element.style.background = "#ffffff";
+        element.style.padding = "25px";
+        element.style.borderRadius = "12px";
+
+        // Pro Trick: Hide the download button from the generated image
+        const downloadBtnContainer = element.lastElementChild; 
+        downloadBtnContainer.style.display = 'none';
+
+        html2canvas(element, {
+            scale: 3, // Multiplies resolution by 3 for extreme clarity
+            useCORS: true,
+            backgroundColor: "#ffffff",
+            logging: false
+        }).then(canvas => {
+            // Restore original styles and show the button again
+            element.style.background = originalBackground;
+            element.style.padding = originalPadding;
+            element.style.borderRadius = originalBorderRadius;
+            downloadBtnContainer.style.display = 'flex'; 
+
+            // Convert canvas to image and trigger download
+            const image = canvas.toDataURL("image/png");
+            const link = document.createElement('a');
+            link.download = `Order_Receipt_${orderId}.png`;
+            link.href = image;
+            link.click();
+            
+            showToast("Receipt downloaded successfully!");
+        }).catch(error => {
+            console.error("Screenshot Error:", error);
+            // Even if it fails, restore the button and styles
+            element.style.background = originalBackground;
+            element.style.padding = originalPadding;
+            element.style.borderRadius = originalBorderRadius;
+            downloadBtnContainer.style.display = 'flex';
+            showToast("Failed to generate receipt", "error");
+        });
     }
 
     // --- Update Order Status ---
