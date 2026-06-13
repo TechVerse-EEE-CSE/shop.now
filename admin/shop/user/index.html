@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
@@ -71,6 +73,12 @@
         .icon-orange { background: rgba(245, 158, 11, 0.08); color: var(--warning); }
         .icon-red { background: rgba(239, 68, 68, 0.08); color: var(--danger); }
         .icon-purple { background: rgba(139, 92, 246, 0.08); color: #8B5CF6; }
+
+        /* --- NEW ADDITION: Chart Containers --- */
+        .chart-container-wrapper { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 35px; }
+        .chart-card { background: var(--card-bg); border-radius: 16px; box-shadow: var(--shadow-sm); padding: 25px; border: 1px solid rgba(0,0,0,0.02); transition: var(--transition); display: flex; flex-direction: column; justify-content: center; }
+        .chart-card:hover { box-shadow: var(--shadow-md); }
+        .chart-card-title { margin-bottom: 20px; font-weight: 800; font-size: 16px; color: var(--sidebar-bg); display: flex; align-items: center; gap: 8px; }
 
         /* --- Control Filter Bar --- */
         .control-bar { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; align-items: center; justify-content: space-between; }
@@ -171,6 +179,7 @@
             .stat-info h2 { font-size: 20px; }
             .panel-card { padding: 15px; }
             .control-bar { flex-direction: column; align-items: stretch; }
+            .chart-container-wrapper { grid-template-columns: 1fr; } /* Added for mobile charts */
         }
         @media (max-width: 480px) {
             .stats-grid { grid-template-columns: 1fr; }
@@ -230,6 +239,28 @@
         <div id="dashboard-tab" class="admin-section active">
             <h2 class="header-title"><i class="fa-solid fa-gauge"></i> Dashboard Overview</h2>
             
+            
+            
+             <div class="chart-container-wrapper">
+                <div class="chart-card">
+                    <div class="chart-card-title"><i class="fa-solid fa-chart-line" style="color:var(--primary)"></i> Revenue Timeline</div>
+                    <div style="position: relative; height: 280px; width: 100%;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-card-title"><i class="fa-solid fa-chart-pie" style="color:var(--warning)"></i> Orders Overview</div>
+                    <div style="position: relative; height: 280px; width: 100%;">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            
+            
+            
+            
+            
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-info">
@@ -275,6 +306,7 @@
                 </div>
             </div>
 
+           
             <div class="panel-card">
                 <h3 style="margin-bottom: 15px; font-weight: 800; display:flex; align-items:center; gap:8px;"><i class="fa-solid fa-bolt" style="color:var(--warning)"></i> Recent Orders <span style="font-size:12px; font-weight:500; color:var(--text-muted);">(Latest 5)</span></h3>
                 <div class="responsive-table-wrapper">
@@ -445,6 +477,10 @@
     window.globalHistoryData = [];
     let editingProductId = null;
 
+    // Chart.js Global Variables
+    window.dashboardRevenueChart = null;
+    window.dashboardStatusChart = null;
+
     // --- Utility: Toast Notification ---
     window.showToast = function(msg, type = 'success') {
         const container = document.getElementById('toast-container');
@@ -455,7 +491,7 @@
         setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 3000);
     }
 
-    // --- NEW ADDITION: Pro Max Admin Activity Logger ---
+    // --- Pro Max Admin Activity Logger ---
     window.logAdminActivity = async function(actionType, details) {
         const currentUser = auth.currentUser;
         if (!currentUser) return;
@@ -470,7 +506,6 @@
             console.error("Failed to log activity:", error);
         }
     }
-    // --- END NEW ADDITION ---
 
     // --- Authentication Logic ---
     window.adminLogin = async () => {
@@ -498,14 +533,14 @@
             document.getElementById('admin-dashboard').style.display = 'flex';
             loadRealtimeOrders();
             loadRealtimeProducts();
-            loadRealtimeHistory(); // NEW ADDITION: Start loading history when logged in
+            loadRealtimeHistory(); 
         } else {
             document.getElementById('login-screen').style.display = 'flex';
             document.getElementById('admin-dashboard').style.display = 'none';
         }
     });
 
-    // --- NEW ADDITION: Load and Render Realtime History ---
+    // --- Load and Render Realtime History ---
     function loadRealtimeHistory() {
         const q = query(collection(db, "activity_logs"));
         onSnapshot(q, (snapshot) => {
@@ -560,7 +595,6 @@
             });
         });
     }
-    // --- END NEW ADDITION ---
 
     // --- Mobile Responsive Navigation Toggle Logic ---
     window.toggleSidebar = function() {
@@ -624,7 +658,94 @@
             window.globalOrdersData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
             renderOrdersTables(window.globalOrdersData);
+            
+            // NEW ADDITION: Render Charts after data load
+            renderProMaxCharts(window.globalOrdersData);
         });
+    }
+
+    // --- NEW ADDITION: Chart Rendering Logic ---
+    function renderProMaxCharts(orders) {
+        // Prepare Data
+        let statusCounts = { Pending: 0, Processing: 0, Delivered: 0, Cancelled: 0 };
+        let revenueTimeline = {};
+
+        // Sort ascending for timeline chart
+        let sortedForChart = [...orders].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+        sortedForChart.forEach(o => {
+            // Doughnut Chart Logic
+            if(statusCounts[o.status] !== undefined) statusCounts[o.status]++;
+            
+            // Line Chart Logic (Daily Revenue)
+            if(o.status !== 'Cancelled' && o.timestamp) {
+                let dateKey = new Date(o.timestamp).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+                revenueTimeline[dateKey] = (revenueTimeline[dateKey] || 0) + (o.totalAmount || 0);
+            }
+        });
+
+        // 1. Revenue Line Chart Initialization
+        const ctxRev = document.getElementById('revenueChart');
+        if(ctxRev) {
+            let labels = Object.keys(revenueTimeline);
+            let data = Object.values(revenueTimeline);
+            
+            if(window.dashboardRevenueChart) window.dashboardRevenueChart.destroy();
+            
+            window.dashboardRevenueChart = new Chart(ctxRev, {
+                type: 'line',
+                data: {
+                    labels: labels.length ? labels : ['No Data'],
+                    datasets: [{
+                        label: 'Total Revenue (৳)',
+                        data: data.length ? data : [0],
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.15)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#FFFFFF',
+                        pointBorderColor: '#10B981',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        fill: true,
+                        tension: 0.4 // Smooth curves
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#F1F5F9' }, ticks: { font: { family: "'Hind Siliguri', sans-serif", weight: '600' } } },
+                        x: { grid: { display: false }, ticks: { font: { family: "'Hind Siliguri', sans-serif", weight: '600' } } }
+                    }
+                }
+            });
+        }
+
+        // 2. Order Status Doughnut Chart Initialization
+        const ctxStatus = document.getElementById('statusChart');
+        if(ctxStatus) {
+            if(window.dashboardStatusChart) window.dashboardStatusChart.destroy();
+            
+            window.dashboardStatusChart = new Chart(ctxStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Pending', 'Processing', 'Delivered', 'Cancelled'],
+                    datasets: [{
+                        data: [statusCounts.Pending, statusCounts.Processing, statusCounts.Delivered, statusCounts.Cancelled],
+                        backgroundColor: ['#F59E0B', '#3B82F6', '#10B981', '#EF4444'],
+                        borderWidth: 0,
+                        hoverOffset: 5
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    cutout: '72%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20, font: { family: "'Hind Siliguri', sans-serif", weight: '600', size: 13 } } }
+                    }
+                }
+            });
+        }
     }
 
     function renderOrdersTables(orders) {
@@ -657,7 +778,6 @@
                 </select>
             `;
 
-            // Full Table Row (Updated to safely map new customer key fallbacks)
             let fullRow = `
                 <tr class="clickable-row" onclick="viewOrderDetails('${order.id}')" title="Click to view details">
                     <td><small style="color:var(--text-muted); font-weight:600;">${dateStr}</small></td>
@@ -677,7 +797,6 @@
             `;
             allTbody.innerHTML += fullRow;
 
-            // Recent Table Row (top 5 - Updated customer key fallbacks)
             if(index < 5) {
                 let recentRow = `
                     <tr class="clickable-row" onclick="viewOrderDetails('${order.id}')">
@@ -727,7 +846,6 @@
             </div>
         `).join('') : 'No items found';
 
-        // --- Modified to include the download button at the bottom ---
         contentContainer.innerHTML = `
             <div class="details-item"><div class="details-label">Order ID:</div><div class="details-value" style="color:var(--primary-dark)">${order.orderId || order.id}</div></div>
             <div class="details-item"><div class="details-label">Customer Name:</div><div class="details-value">${order.customerName || order.userName || 'Guest User'}</div></div>
@@ -787,38 +905,33 @@
         document.getElementById('history-details-modal').classList.remove('active');
     }
 
-    // ---   Image Download Logic ---
+    // --- Image Download Logic ---
     window.downloadOrderReceipt = function(orderId) {
         const element = document.getElementById('order-details-content');
         showToast("photo generate..."); 
         
-        // Save original styles to restore them later
         const originalBackground = element.style.background;
         const originalPadding = element.style.padding;
         const originalBorderRadius = element.style.borderRadius;
         
-        // Add white background specifically for the screenshot so it looks clean
         element.style.background = "#ffffff";
         element.style.padding = "25px";
         element.style.borderRadius = "12px";
 
-        // Pro Trick: Hide the download button from the generated image
         const downloadBtnContainer = element.lastElementChild; 
         downloadBtnContainer.style.display = 'none';
 
         html2canvas(element, {
-            scale: 3, // Multiplies resolution by 3 for extreme clarity
+            scale: 3, 
             useCORS: true,
             backgroundColor: "#ffffff",
             logging: false
         }).then(canvas => {
-            // Restore original styles and show the button again
             element.style.background = originalBackground;
             element.style.padding = originalPadding;
             element.style.borderRadius = originalBorderRadius;
             downloadBtnContainer.style.display = 'flex'; 
 
-            // Convert canvas to image and trigger download
             const image = canvas.toDataURL("image/png");
             const link = document.createElement('a');
             link.download = `Order_Receipt_${orderId}.png`;
@@ -828,7 +941,6 @@
             showToast("Receipt downloaded successfully!");
         }).catch(error => {
             console.error("Screenshot Error:", error);
-            // Even if it fails, restore the button and styles
             element.style.background = originalBackground;
             element.style.padding = originalPadding;
             element.style.borderRadius = originalBorderRadius;
@@ -841,10 +953,7 @@
     window.updateStatus = async function(docId, newStatus) {
         try {
             await updateDoc(doc(db, "orders", docId), { status: newStatus });
-            
-            // NEW ADDITION: Log Status Update
             window.logAdminActivity("Order Updated", `Order ID: ${docId.substring(0,8)} marked as '${newStatus}'`);
-            
             showToast("Status updated successfully!");
         } catch (error) {
             showToast("Failed to update status", "error");
@@ -908,18 +1017,12 @@
         try {
             if(editingProductId) {
                 await updateDoc(doc(db, "products", editingProductId), productPayload);
-                
-                // NEW ADDITION: Log Product Edit
                 window.logAdminActivity("Product Updated", `Modified details for: ${name}`);
-                
                 showToast("Product updated successfully!");
             } else {
                 productPayload.timestamp = new Date().toISOString();
                 await addDoc(collection(db, "products"), productPayload);
-                
-                // NEW ADDITION: Log Product Add
                 window.logAdminActivity("Product Added", `Added a new product: ${name}`);
-                
                 showToast("Product added successfully!");
             }
             
@@ -985,7 +1088,6 @@
         });
     }
 
-    // --- Product Live Search Function ---
     window.filterProductsLive = function() {
         const queryText = document.getElementById('product-search-input').value.toLowerCase().trim();
         let filtered = window.globalProductsData.filter(p => {
@@ -996,15 +1098,11 @@
 
     window.deleteProduct = async (docId) => {
         if(confirm("Are you sure you want to delete this product?")) {
-            // Get name before deleting for the log
             const prodName = window.allProductsCache[docId]?.name || "Unknown Product";
             
             try {
                 await deleteDoc(doc(db, "products", docId));
-                
-                // NEW ADDITION: Log Product Deletion
                 window.logAdminActivity("Product Deleted", `Removed product: ${prodName}`);
-                
                 showToast("Product deleted successfully!");
             } catch (error) {
                 showToast("Failed to delete product", "error");
