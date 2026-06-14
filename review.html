@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Product Reviews | Shop Verse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #10B981; 
+            --primary-dark: #059669;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.08);
+            --glass-bg: rgba(255, 255, 255, 0.75);
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Hind Siliguri', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: radial-gradient(circle at top left, #E2E8F0, #F8FAFC, #E2E8F0);
+            color: var(--text-main); 
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start;
+            min-height: 100vh; 
+            padding: 20px 0;
+        }
+        
+        #app-container {
+            width: 100%; max-width: 420px; 
+            background: var(--bg-color); position: relative;
+            display: flex; flex-direction: column;
+            box-shadow: 0 0 40px rgba(0,0,0,0.1); 
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white; padding: 20px; display: flex;
+            justify-content: space-between; align-items: center;
+            font-size: 1.4rem; font-weight: 700; z-index: 20; 
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
+        }
+
+        .header button { 
+            background: rgba(255,255,255,0.25); color: white; border: 1px solid rgba(255,255,255,0.5); 
+            backdrop-filter: blur(8px); padding: 8px 18px; border-radius: 25px; font-weight: 600; 
+            cursor: pointer; transition: all 0.3s ease;
+        }
+
+        /* Main Content */
+        .main-content { 
+            flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 80px; scroll-behavior: smooth; 
+        }
+
+        .section-title { 
+            font-size: 18px; color: var(--text-main); font-weight: 700; 
+            margin-bottom: 15px; display: flex; align-items: center; gap: 8px; 
+        }
+
+        /* Review Stats Card */
+        .stats-container {
+            background: var(--card-bg); border-radius: 20px; padding: 20px;
+            box-shadow: var(--shadow-sm); margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .stats-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;
+        }
+
+        .stat-item {
+            text-align: center; padding: 12px;
+            background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.08));
+            border-radius: 12px;
+        }
+
+        .stat-number {
+            font-size: 24px; font-weight: 800; color: var(--primary-dark); margin-bottom: 3px;
+        }
+
+        .stat-label {
+            font-size: 12px; color: var(--text-muted); font-weight: 600;
+        }
+
+        /* Star Rating Display */
+        .rating-display {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 15px;
+        }
+
+        .big-rating {
+            font-size: 32px; font-weight: 800; color: var(--primary-dark);
+        }
+
+        .stars-container {
+            display: flex; gap: 4px;
+        }
+
+        .star { 
+            font-size: 14px; color: #FCD34D;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .star.empty { color: #E5E7EB; }
+
+        .rating-bar {
+            width: 100%; height: 6px; background: #E5E7EB;
+            border-radius: 3px; overflow: hidden; margin: 6px 0;
+        }
+
+        .rating-fill {
+            height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 3px; transition: width 0.3s ease;
+        }
+
+        /* Review Item */
+        .review-item {
+            background: var(--card-bg); border-radius: 16px; padding: 16px;
+            margin-bottom: 12px; box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255,255,255,0.8);
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .review-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .reviewer-info {
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .reviewer-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 16px;
+            box-shadow: 0 4px 8px rgba(16, 185, 129, 0.2);
+        }
+
+        .reviewer-details h4 {
+            font-size: 14px; color: var(--text-main); font-weight: 700; margin-bottom: 2px;
+        }
+
+        .reviewer-details small {
+            font-size: 12px; color: var(--text-muted); font-weight: 500;
+        }
+
+        .review-rating {
+            display: flex; gap: 3px;
+        }
+
+        .review-rating .star { font-size: 12px; }
+
+        .review-title {
+            font-size: 14px; font-weight: 700; color: var(--text-main);
+            margin: 10px 0 6px 0;
+        }
+
+        .review-text {
+            font-size: 13px; color: var(--text-muted); line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .review-meta {
+            display: flex; gap: 12px; font-size: 11px; color: var(--text-muted);
+            font-weight: 600; flex-wrap: wrap;
+        }
+
+        .review-helpful {
+            display: flex; gap: 8px; margin-top: 10px;
+        }
+
+        .helpful-btn {
+            background: #F1F5F9; border: none; padding: 6px 12px;
+            border-radius: 8px; font-size: 11px; font-weight: 700;
+            color: var(--text-muted); cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .helpful-btn:hover {
+            background: var(--primary); color: white;
+        }
+
+        .helpful-btn.active {
+            background: var(--primary); color: white;
+        }
+
+        /* Write Review Button */
+        .write-review-btn {
+            background: var(--primary); color: white; width: 100%;
+            padding: 14px; border: none; border-radius: 14px; font-size: 15px;
+            font-weight: 700; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; gap: 8px; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+            margin-bottom: 20px; transition: all 0.3s ease;
+        }
+
+        .write-review-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Filter & Sort */
+        .filter-bar {
+            display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .filter-tag {
+            background: #F1F5F9; border: none; padding: 8px 14px;
+            border-radius: 20px; font-size: 12px; font-weight: 700;
+            color: var(--text-muted); cursor: pointer;
+            white-space: nowrap; transition: all 0.3s ease;
+            border: 1px solid #E2E8F0;
+        }
+
+        .filter-tag.active {
+            background: var(--primary); color: white; border-color: var(--primary);
+        }
+
+        .filter-tag:hover {
+            border-color: var(--primary);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(5px); z-index: 99; display: none; opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: block; opacity: 1;
+        }
+
+        .review-modal {
+            position: fixed; bottom: -100%; left: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+            border-radius: 35px 35px 0 0; padding: 30px 25px calc(25px + env(safe-area-inset-bottom));
+            box-shadow: 0 -15px 40px rgba(0,0,0,0.15);
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1);
+            z-index: 100; max-height: 90vh; overflow-y: auto;
+        }
+
+        .review-modal.active { bottom: 0; }
+
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-header h3 {
+            font-size: 22px; color: var(--text-main); font-weight: 800;
+        }
+
+        .close-btn {
+            background: #F1F5F9; border: none; width: 36px; height: 36px;
+            border-radius: 50%; color: var(--text-muted); font-size: 16px;
+            cursor: pointer; transition: 0.3s;
+        }
+
+        .close-btn:active { background: #E2E8F0; transform: scale(0.9); }
+
+        /* Rating Selector */
+        .rating-selector {
+            margin-bottom: 20px;
+        }
+
+        .rating-selector label {
+            font-size: 14px; font-weight: 700; color: var(--text-main);
+            display: block; margin-bottom: 10px;
+        }
+
+        .star-input {
+            display: flex; gap: 8px; font-size: 28px;
+        }
+
+        .star-input i {
+            cursor: pointer; transition: all 0.2s;
+            color: #E5E7EB;
+        }
+
+        .star-input i:hover,
+        .star-input i.selected {
+            color: #FCD34D;
+            transform: scale(1.2);
+        }
+
+        /* Form Inputs */
+        .custom-input {
+            width: 100%; padding: 14px 16px; background: white;
+            border: 1.5px solid #E2E8F0; border-radius: 12px;
+            font-size: 14px; outline: none; transition: 0.3s;
+            margin-bottom: 15px; font-family: inherit;
+        }
+
+        .custom-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+        }
+
+        .custom-input::placeholder { color: #94A3B8; }
+
+        /* Submit Button */
+        .submit-review-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; width: 100%; padding: 14px; border: none;
+            border-radius: 12px; font-size: 15px; font-weight: 700;
+            cursor: pointer; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s;
+        }
+
+        .submit-review-btn:active { transform: scale(0.98); }
+        .submit-review-btn:disabled { background: #CBD5E1; cursor: not-allowed; }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center; color: var(--text-muted);
+            padding: 40px 20px; animation: slideIn 0.5s;
+        }
+
+        .empty-state i { font-size: 50px; color: #CBD5E1; margin-bottom: 12px; }
+
+        /* Toast */
+        #toast-container {
+            position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+            width: 90%; z-index: 300; display: flex; flex-direction: column; gap: 12px;
+        }
+
+        .toast {
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
+            color: white; padding: 14px 20px; border-radius: 12px; font-size: 13px;
+            font-weight: 600; display: flex; align-items: center; gap: 8px;
+            animation: slideIn 0.3s;
+        }
+
+        .toast.error { background: rgba(239, 68, 68, 0.95); }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 420px; margin: 0 auto;
+            background: var(--glass-bg); backdrop-filter: blur(20px);
+            display: flex; justify-content: space-around;
+            padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+            border-radius: 30px 30px 0 0; box-shadow: 0 -10px 25px rgba(0,0,0,0.06);
+            z-index: 50; border-top: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .nav-item {
+            text-align: center; color: var(--text-muted); cursor: pointer;
+            flex: 1; font-size: 12px; font-weight: 600; transition: all 0.3s;
+        }
+
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item.active i { transform: translateY(-3px) scale(1.1); }
+
+        /* Verified Badge */
+        .verified-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: rgba(16, 185, 129, 0.15); color: var(--primary);
+            padding: 4px 8px; border-radius: 6px; font-size: 11px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .review-modal { padding: 25px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    <div class="header">
+        <div><i class="fa-solid fa-star" style="margin-right: 8px;"></i> Reviews</div>
+        <button onclick="goBack()"><i class="fa-solid fa-arrow-left"></i></button>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <div class="main-content">
+        <!-- Product Selection -->
+        <div class="section-title"><i class="fa-solid fa-box"></i> Select Product</div>
+        <select id="product-select" class="custom-input" style="margin-bottom: 20px;">
+            <option value="">Choose a product to view reviews...</option>
+        </select>
+
+        <!-- Review Stats Card -->
+        <div id="stats-card" class="stats-container" style="display: none;">
+            <div class="rating-display">
+                <div class="big-rating" id="avg-rating">4.5</div>
+                <div>
+                    <div class="stars-container">
+                        <i class="fa-solid fa-star star" id="star1"></i>
+                        <i class="fa-solid fa-star star" id="star2"></i>
+                        <i class="fa-solid fa-star star" id="star3"></i>
+                        <i class="fa-solid fa-star star" id="star4"></i>
+                        <i class="fa-solid fa-star star" id="star5"></i>
+                    </div>
+                    <small id="total-reviews">Based on 24 reviews</small>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="stat-5star">12</div>
+                    <div class="stat-label">5 Star</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="stat-4star">8</div>
+                    <div class="stat-label">4 Star</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="stat-3star">3</div>
+                    <div class="stat-label">3 Star</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="stat-below3">1</div>
+                    <div class="stat-label">Below 3 Star</div>
+                </div>
+            </div>
+
+            <!-- Rating Breakdown -->
+            <div style="margin-top: 15px;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-main); width: 50px;">5 <i class="fa-solid fa-star" style="color: #FCD34D; margin-left: 3px;"></i></span>
+                    <div class="rating-bar"><div class="rating-fill" style="width: 50%;"></div></div>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">50%</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-main); width: 50px;">4 <i class="fa-solid fa-star" style="color: #FCD34D; margin-left: 3px;"></i></span>
+                    <div class="rating-bar"><div class="rating-fill" style="width: 33%;"></div></div>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">33%</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-main); width: 50px;">3 <i class="fa-solid fa-star" style="color: #FCD34D; margin-left: 3px;"></i></span>
+                    <div class="rating-bar"><div class="rating-fill" style="width: 13%;"></div></div>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">13%</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-main); width: 50px;">Below 3 <i class="fa-solid fa-star" style="color: #FCD34D; margin-left: 3px;"></i></span>
+                    <div class="rating-bar"><div class="rating-fill" style="width: 4%;"></div></div>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">4%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Write Review Button -->
+        <button class="write-review-btn" id="write-review-btn" style="display: none;" onclick="openReviewModal()">
+            <i class="fa-solid fa-pen-to-square"></i> Write a Review
+        </button>
+
+        <!-- Filter & Sort -->
+        <div class="filter-bar" id="filter-bar" style="display: none;">
+            <button class="filter-tag active" onclick="filterReviews('all')">All Reviews</button>
+            <button class="filter-tag" onclick="filterReviews(5)"><i class="fa-solid fa-star"></i> 5 Star</button>
+            <button class="filter-tag" onclick="filterReviews(4)"><i class="fa-solid fa-star"></i> 4 Star</button>
+            <button class="filter-tag" onclick="filterReviews(3)"><i class="fa-solid fa-star"></i> 3 Star</button>
+        </div>
+
+        <!-- Reviews List -->
+        <div class="section-title" id="reviews-title" style="display: none;">
+            <i class="fa-solid fa-comments"></i> Customer Reviews
+        </div>
+        <div id="reviews-container"></div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal-overlay" id="review-overlay" onclick="closeReviewModal()"></div>
+    <div class="review-modal" id="review-modal">
+        <div class="modal-header">
+            <h3>Write Your Review</h3>
+            <button class="close-btn" onclick="closeReviewModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <form id="review-form" onsubmit="submitReview(event)">
+            <!-- Rating Selector -->
+            <div class="rating-selector">
+                <label>Rate this product <span style="color: var(--danger);">*</span></label>
+                <div class="star-input" id="star-input">
+                    <i class="fa-solid fa-star" data-rating="1"></i>
+                    <i class="fa-solid fa-star" data-rating="2"></i>
+                    <i class="fa-solid fa-star" data-rating="3"></i>
+                    <i class="fa-solid fa-star" data-rating="4"></i>
+                    <i class="fa-solid fa-star" data-rating="5"></i>
+                </div>
+                <input type="hidden" id="selected-rating" value="0">
+            </div>
+
+            <!-- Title -->
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px;">Review Title <span style="color: var(--danger);">*</span></label>
+                <input type="text" id="review-title" class="custom-input" placeholder="e.g., Amazing quality!" required>
+            </div>
+
+            <!-- Review Text -->
+            <div>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px;">Review Details <span style="color: var(--danger);">*</span></label>
+                <textarea id="review-text" class="custom-input" placeholder="Share your experience with this product..." style="height: 100px; resize: none;" required></textarea>
+            </div>
+
+            <!-- Verified Purchase -->
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                <input type="checkbox" id="verified-check" style="width: 18px; height: 18px; cursor: pointer;">
+                <label style="font-size: 13px; color: var(--text-muted); cursor: pointer;">
+                    I have purchased this product <span class="verified-badge"><i class="fa-solid fa-check"></i> Verified</span>
+                </label>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-review-btn">
+                <i class="fa-solid fa-paper-plane"></i> Submit Review
+            </button>
+        </form>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</div>
+        <div class="nav-item active"><i class="fa-solid fa-star"></i> Reviews</div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { 
+        getAuth, onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { 
+        getFirestore, collection, addDoc, onSnapshot, query, where, updateDoc, doc, increment
+    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyD_2mcIc6bsva2zJiAJl9vBZCn_d7K4-2Y",
+        authDomain: "shopverse-signup.firebaseapp.com",
+        projectId: "shopverse-signup",
+        storageBucket: "shopverse-signup.firebasestorage.app",
+        messagingSenderId: "139812126519",
+        appId: "1:139812126519:web:30efeceee0b54a0a5964b2",
+        measurementId: "G-SRYF64JX3N"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    let selectedProductId = null;
+    let allReviews = [];
+    let selectedRating = 0;
+    let filteredRating = 'all';
+
+    // --- Toast Notification ---
+    window.showToast = function(msg, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-triangle-exclamation'}"></i> ${msg}`;
+        container.appendChild(toast);
+        setTimeout(() => { toast.remove(); }, 3500);
+    }
+
+    // --- Go Back ---
+    window.goBack = function() {
+        window.location.href = 'index.html';
+    }
+
+    // --- Auth State ---
+    onAuthStateChanged(auth, (user) => {
+        currentUser = user;
+    });
+
+    // --- Load Products ---
+    async function loadProducts() {
+        const q = query(collection(db, "products"));
+        onSnapshot(q, (snapshot) => {
+            const select = document.getElementById('product-select');
+            select.innerHTML = '<option value="">Choose a product to view reviews...</option>';
+            
+            snapshot.forEach((doc) => {
+                const p = { id: doc.id, ...doc.data() };
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = p.name || 'Unknown Product';
+                select.appendChild(option);
+            });
+        });
+    }
+
+    // --- Product Selection ---
+    document.getElementById('product-select').addEventListener('change', function() {
+        selectedProductId = this.value;
+        filteredRating = 'all';
+        
+        if (selectedProductId) {
+            loadReviews();
+            document.getElementById('stats-card').style.display = 'block';
+            document.getElementById('write-review-btn').style.display = 'flex';
+            document.getElementById('filter-bar').style.display = 'flex';
+            document.getElementById('reviews-title').style.display = 'flex';
+        } else {
+            document.getElementById('stats-card').style.display = 'none';
+            document.getElementById('write-review-btn').style.display = 'none';
+            document.getElementById('filter-bar').style.display = 'none';
+            document.getElementById('reviews-title').style.display = 'none';
+            document.getElementById('reviews-container').innerHTML = '';
+        }
+    });
+
+    // --- Load & Render Reviews ---
+    function loadReviews() {
+        const q = query(collection(db, "reviews"), where("productId", "==", selectedProductId));
+        
+        onSnapshot(q, (snapshot) => {
+            allReviews = [];
+            
+            snapshot.forEach((doc) => {
+                allReviews.push({ id: doc.id, ...doc.data() });
+            });
+
+            allReviews.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            updateStats();
+            renderReviews();
+        });
+    }
+
+    // --- Update Stats ---
+    function updateStats() {
+        const ratings = {
+            5: allReviews.filter(r => r.rating === 5).length,
+            4: allReviews.filter(r => r.rating === 4).length,
+            3: allReviews.filter(r => r.rating === 3).length,
+            below3: allReviews.filter(r => r.rating < 3).length
+        };
+
+        const total = allReviews.length || 1;
+        const avgRating = allReviews.length > 0 
+            ? (allReviews.reduce((sum, r) => sum + r.rating, 0) / total).toFixed(1)
+            : 0;
+
+        document.getElementById('avg-rating').textContent = avgRating;
+        document.getElementById('total-reviews').textContent = `Based on ${total} review${total !== 1 ? 's' : ''}`;
+
+        // Update stars
+        for (let i = 1; i <= 5; i++) {
+            const star = document.getElementById(`star${i}`);
+            star.classList.toggle('empty', i > Math.round(avgRating));
+        }
+
+        document.getElementById('stat-5star').textContent = ratings[5];
+        document.getElementById('stat-4star').textContent = ratings[4];
+        document.getElementById('stat-3star').textContent = ratings[3];
+        document.getElementById('stat-below3').textContent = ratings.below3;
+    }
+
+    // --- Filter Reviews ---
+    window.filterReviews = function(rating) {
+        filteredRating = rating;
+        
+        document.querySelectorAll('.filter-tag').forEach(tag => {
+            tag.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        renderReviews();
+    }
+
+    // --- Render Reviews ---
+    function renderReviews() {
+        const container = document.getElementById('reviews-container');
+        
+        let filtered = filteredRating === 'all' 
+            ? allReviews 
+            : allReviews.filter(r => r.rating === filteredRating);
+
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fa-solid fa-inbox"></i>
+                    <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 5px;">No reviews yet</h3>
+                    <p style="font-size: 12px;">Be the first to review this product!</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = filtered.map(review => {
+            const date = new Date(review.timestamp);
+            const timeStr = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            const initials = (review.userName || 'U').substring(0, 2).toUpperCase();
+
+            return `
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <div class="reviewer-avatar">${initials}</div>
+                            <div class="reviewer-details">
+                                <h4>${review.userName || 'Anonymous'}</h4>
+                                <small>${timeStr}</small>
+                            </div>
+                        </div>
+                        <div class="review-rating">
+                            ${[1,2,3,4,5].map(i => `<i class="fa-solid fa-star star ${i <= review.rating ? '' : 'empty'}"></i>`).join('')}
+                        </div>
+                    </div>
+
+                    <div class="review-title">${review.title || 'No title'}</div>
+                    <div class="review-text">${review.text || 'No text'}</div>
+
+                    <div class="review-meta">
+                        ${review.isVerified ? '<span class="verified-badge"><i class="fa-solid fa-check"></i> Verified Purchase</span>' : ''}
+                        ${review.helpful ? `<span><i class="fa-solid fa-thumbs-up"></i> ${review.helpful} found helpful</span>` : ''}
+                    </div>
+
+                    <div class="review-helpful">
+                        <button class="helpful-btn" onclick="markHelpful('${review.id}')">
+                            <i class="fa-solid fa-thumbs-up"></i> Helpful
+                        </button>
+                        <button class="helpful-btn" onclick="reportReview('${review.id}')">
+                            <i class="fa-solid fa-flag"></i> Report
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // --- Star Rating Selector ---
+    document.querySelectorAll('#star-input i').forEach(star => {
+        star.addEventListener('click', function() {
+            selectedRating = parseInt(this.dataset.rating);
+            document.getElementById('selected-rating').value = selectedRating;
+            
+            document.querySelectorAll('#star-input i').forEach((s, idx) => {
+                if (idx < selectedRating) {
+                    s.classList.add('selected');
+                } else {
+                    s.classList.remove('selected');
+                }
+            });
+        });
+    });
+
+    // --- Open Review Modal ---
+    window.openReviewModal = function() {
+        if (!currentUser) {
+            showToast("Please login to write a review", "error");
+            setTimeout(() => window.location.href = 'index.html', 1500);
+            return;
+        }
+        document.getElementById('review-overlay').classList.add('active');
+        document.getElementById('review-modal').classList.add('active');
+    }
+
+    window.closeReviewModal = function() {
+        document.getElementById('review-overlay').classList.remove('active');
+        document.getElementById('review-modal').classList.remove('active');
+    }
+
+    // --- Submit Review ---
+    window.submitReview = async function(e) {
+        e.preventDefault();
+
+        if (selectedRating === 0) {
+            showToast("Please select a rating", "error");
+            return;
+        }
+
+        const title = document.getElementById('review-title').value;
+        const text = document.getElementById('review-text').value;
+        const isVerified = document.getElementById('verified-check').checked;
+
+        try {
+            await addDoc(collection(db, "reviews"), {
+                productId: selectedProductId,
+                userId: currentUser.uid,
+                userName: currentUser.displayName || 'Anonymous',
+                rating: selectedRating,
+                title: title,
+                text: text,
+                isVerified: isVerified,
+                helpful: 0,
+                timestamp: new Date().toISOString()
+            });
+
+            showToast("Review submitted successfully!");
+            document.getElementById('review-form').reset();
+            selectedRating = 0;
+            closeReviewModal();
+            loadReviews();
+        } catch (error) {
+            showToast("Failed to submit review", "error");
+            console.error(error);
+        }
+    }
+
+    // --- Mark Helpful ---
+    window.markHelpful = async function(reviewId) {
+        try {
+            const reviewRef = doc(db, "reviews", reviewId);
+            await updateDoc(reviewRef, {
+                helpful: increment(1)
+            });
+            loadReviews();
+        } catch (error) {
+            showToast("Failed to mark helpful", "error");
+        }
+    }
+
+    // --- Report Review ---
+    window.reportReview = function(reviewId) {
+        showToast("Review reported successfully");
+    }
+
+    // Initialize
+    loadProducts();
+</script>
+
+</body>
+</html>
