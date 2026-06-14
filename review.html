@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Product Reviews | Shop Verse</title>
+    <title>Reviews | Shop Verse</title>
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -22,114 +22,247 @@
             --glass-bg: rgba(255, 255, 255, 0.75);
         }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Hind Siliguri', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { 
+            box-sizing: border-box; margin: 0; padding: 0; 
+            font-family: 'Hind Siliguri', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+        }
         
         body { 
             background: radial-gradient(circle at top left, #E2E8F0, #F8FAFC, #E2E8F0);
             color: var(--text-main); 
             display: flex; 
             justify-content: center; 
-            align-items: flex-start;
+            align-items: center;
             min-height: 100vh; 
             padding: 20px 0;
         }
         
         #app-container {
-            width: 100%; max-width: 420px; 
-            background: var(--bg-color); position: relative;
-            display: flex; flex-direction: column;
+            width: 100%; 
+            max-width: 420px; 
+            background: var(--bg-color); 
+            position: relative;
+            display: flex; 
+            flex-direction: column;
             box-shadow: 0 0 40px rgba(0,0,0,0.1); 
             border-radius: 20px;
             overflow: hidden;
             margin: 20px;
+            height: 100dvh;
+            max-height: 100dvh;
         }
 
         /* Header */
         .header {
             background: linear-gradient(135deg, #10B981, #059669);
-            color: white; padding: 20px; display: flex;
-            justify-content: space-between; align-items: center;
-            font-size: 1.4rem; font-weight: 700; z-index: 20; 
+            color: white; 
+            padding: 20px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            font-size: 1.4rem; 
+            font-weight: 700; 
+            z-index: 20; 
             box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-            border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;
+            border-bottom-left-radius: 15px; 
+            border-bottom-right-radius: 15px;
         }
 
         .header button { 
-            background: rgba(255,255,255,0.25); color: white; border: 1px solid rgba(255,255,255,0.5); 
-            backdrop-filter: blur(8px); padding: 8px 18px; border-radius: 25px; font-weight: 600; 
-            cursor: pointer; transition: all 0.3s ease;
+            background: rgba(255,255,255,0.25); 
+            color: white; 
+            border: 1px solid rgba(255,255,255,0.5); 
+            backdrop-filter: blur(8px); 
+            padding: 8px 18px; 
+            border-radius: 25px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.3s ease;
         }
 
         /* Main Content */
         .main-content { 
-            flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 80px; scroll-behavior: smooth; 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 20px; 
+            padding-bottom: 110px; 
+            scroll-behavior: smooth; 
         }
 
+        .main-content::-webkit-scrollbar { width: 0px; }
+
         .section-title { 
-            font-size: 18px; color: var(--text-main); font-weight: 700; 
-            margin-bottom: 15px; display: flex; align-items: center; gap: 8px; 
+            font-size: 18px; 
+            color: var(--text-main); 
+            font-weight: 700; 
+            margin-bottom: 15px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+
+        /* Product Card */
+        .product-selector-card {
+            background: var(--card-bg); 
+            border-radius: 16px; 
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.8);
+            display: flex; 
+            align-items: center; 
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .product-selector-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .product-icon {
+            width: 50px; 
+            height: 50px; 
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(5,150,105,0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .product-rating-mini {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 3px;
         }
 
         /* Review Stats Card */
         .stats-container {
-            background: var(--card-bg); border-radius: 20px; padding: 20px;
-            box-shadow: var(--shadow-sm); margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.8);
+            background: var(--card-bg); 
+            border-radius: 20px; 
+            padding: 20px;
+            box-shadow: var(--shadow-sm); 
+            margin-bottom: 20px; 
+            border: 1px solid rgba(255,255,255,0.8);
         }
 
         .stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            margin-bottom: 15px;
         }
 
         .stat-item {
-            text-align: center; padding: 12px;
+            text-align: center; 
+            padding: 12px;
             background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.08));
             border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .stat-item:hover {
+            background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(5,150,105,0.12));
+            transform: scale(1.05);
         }
 
         .stat-number {
-            font-size: 24px; font-weight: 800; color: var(--primary-dark); margin-bottom: 3px;
+            font-size: 24px; 
+            font-weight: 800; 
+            color: var(--primary-dark); 
+            margin-bottom: 3px;
         }
 
         .stat-label {
-            font-size: 12px; color: var(--text-muted); font-weight: 600;
+            font-size: 12px; 
+            color: var(--text-muted); 
+            font-weight: 600;
         }
 
         /* Star Rating Display */
         .rating-display {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 15px;
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(5,150,105,0.05));
+            padding: 15px;
+            border-radius: 12px;
         }
 
         .big-rating {
-            font-size: 32px; font-weight: 800; color: var(--primary-dark);
+            font-size: 36px; 
+            font-weight: 800; 
+            color: var(--primary-dark);
         }
 
         .stars-container {
-            display: flex; gap: 4px;
+            display: flex; 
+            gap: 4px;
         }
 
         .star { 
-            font-size: 14px; color: #FCD34D;
+            font-size: 16px; 
+            color: #FCD34D;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: 0.2s;
         }
 
-        .star.empty { color: #E5E7EB; }
+        .star.empty { 
+            color: #E5E7EB; 
+        }
+
+        .star:hover {
+            transform: scale(1.1);
+        }
 
         .rating-bar {
-            width: 100%; height: 6px; background: #E5E7EB;
-            border-radius: 3px; overflow: hidden; margin: 6px 0;
+            width: 100%; 
+            height: 6px; 
+            background: #E5E7EB;
+            border-radius: 3px; 
+            overflow: hidden; 
+            margin: 6px 0;
         }
 
         .rating-fill {
-            height: 100%; background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-            border-radius: 3px; transition: width 0.3s ease;
+            height: 100%; 
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            border-radius: 3px; 
+            transition: width 0.3s ease;
         }
 
         /* Review Item */
         .review-item {
-            background: var(--card-bg); border-radius: 16px; padding: 16px;
-            margin-bottom: 12px; box-shadow: var(--shadow-sm);
+            background: var(--card-bg); 
+            border-radius: 16px; 
+            padding: 16px;
+            margin-bottom: 12px; 
+            box-shadow: var(--shadow-sm);
             border: 1px solid rgba(255,255,255,0.8);
             animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s;
+        }
+
+        .review-item:hover {
+            box-shadow: var(--shadow-md);
         }
 
         @keyframes slideIn {
@@ -138,77 +271,131 @@
         }
 
         .review-header {
-            display: flex; justify-content: space-between; align-items: flex-start;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start;
             margin-bottom: 10px;
         }
 
         .reviewer-info {
-            display: flex; align-items: center; gap: 10px;
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
         }
 
         .reviewer-avatar {
-            width: 40px; height: 40px; border-radius: 50%;
+            width: 44px; 
+            height: 44px; 
+            border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-weight: 700; font-size: 16px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            color: white; 
+            font-weight: 700; 
+            font-size: 16px;
             box-shadow: 0 4px 8px rgba(16, 185, 129, 0.2);
+            flex-shrink: 0;
         }
 
         .reviewer-details h4 {
-            font-size: 14px; color: var(--text-main); font-weight: 700; margin-bottom: 2px;
+            font-size: 14px; 
+            color: var(--text-main); 
+            font-weight: 700; 
+            margin-bottom: 2px;
         }
 
         .reviewer-details small {
-            font-size: 12px; color: var(--text-muted); font-weight: 500;
+            font-size: 12px; 
+            color: var(--text-muted); 
+            font-weight: 500;
         }
 
         .review-rating {
-            display: flex; gap: 3px;
+            display: flex; 
+            gap: 3px;
         }
 
-        .review-rating .star { font-size: 12px; }
+        .review-rating .star { 
+            font-size: 14px; 
+        }
 
         .review-title {
-            font-size: 14px; font-weight: 700; color: var(--text-main);
+            font-size: 14px; 
+            font-weight: 700; 
+            color: var(--text-main);
             margin: 10px 0 6px 0;
         }
 
         .review-text {
-            font-size: 13px; color: var(--text-muted); line-height: 1.5;
+            font-size: 13px; 
+            color: var(--text-muted); 
+            line-height: 1.5;
             margin-bottom: 10px;
         }
 
         .review-meta {
-            display: flex; gap: 12px; font-size: 11px; color: var(--text-muted);
-            font-weight: 600; flex-wrap: wrap;
+            display: flex; 
+            gap: 12px; 
+            font-size: 11px; 
+            color: var(--text-muted);
+            font-weight: 600; 
+            flex-wrap: wrap;
+            margin-bottom: 10px;
         }
 
         .review-helpful {
-            display: flex; gap: 8px; margin-top: 10px;
+            display: flex; 
+            gap: 8px; 
+            margin-top: 10px;
         }
 
         .helpful-btn {
-            background: #F1F5F9; border: none; padding: 6px 12px;
-            border-radius: 8px; font-size: 11px; font-weight: 700;
-            color: var(--text-muted); cursor: pointer;
+            background: #F1F5F9; 
+            border: 1px solid #E2E8F0;
+            padding: 6px 12px;
+            border-radius: 8px; 
+            font-size: 11px; 
+            font-weight: 700;
+            color: var(--text-muted); 
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
+        .helpful-btn:active {
+            transform: scale(0.95);
+        }
+
         .helpful-btn:hover {
-            background: var(--primary); color: white;
+            background: var(--primary); 
+            color: white;
+            border-color: var(--primary);
         }
 
         .helpful-btn.active {
-            background: var(--primary); color: white;
+            background: var(--primary); 
+            color: white;
+            border-color: var(--primary);
         }
 
         /* Write Review Button */
         .write-review-btn {
-            background: var(--primary); color: white; width: 100%;
-            padding: 14px; border: none; border-radius: 14px; font-size: 15px;
-            font-weight: 700; cursor: pointer; display: flex; align-items: center;
-            justify-content: center; gap: 8px; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
-            margin-bottom: 20px; transition: all 0.3s ease;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
+            color: white; 
+            width: 100%;
+            padding: 14px; 
+            border: none; 
+            border-radius: 14px; 
+            font-size: 15px;
+            font-weight: 700; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center;
+            justify-content: center; 
+            gap: 8px; 
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+            margin-bottom: 20px; 
+            transition: all 0.3s ease;
         }
 
         .write-review-btn:active {
@@ -217,20 +404,40 @@
 
         /* Filter & Sort */
         .filter-bar {
-            display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto;
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 15px; 
+            overflow-x: auto;
             padding-bottom: 8px;
+            scroll-behavior: smooth;
+        }
+
+        .filter-bar::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .filter-bar::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
         }
 
         .filter-tag {
-            background: #F1F5F9; border: none; padding: 8px 14px;
-            border-radius: 20px; font-size: 12px; font-weight: 700;
-            color: var(--text-muted); cursor: pointer;
-            white-space: nowrap; transition: all 0.3s ease;
+            background: #F1F5F9; 
             border: 1px solid #E2E8F0;
+            padding: 8px 14px;
+            border-radius: 20px; 
+            font-size: 12px; 
+            font-weight: 700;
+            color: var(--text-muted); 
+            cursor: pointer;
+            white-space: nowrap; 
+            transition: all 0.3s ease;
         }
 
         .filter-tag.active {
-            background: var(--primary); color: white; border-color: var(--primary);
+            background: var(--primary); 
+            color: white; 
+            border-color: var(--primary);
         }
 
         .filter-tag:hover {
@@ -239,42 +446,73 @@
 
         /* Modal Styles */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5);
-            backdrop-filter: blur(5px); z-index: 99; display: none; opacity: 0;
+            position: fixed; 
+            inset: 0; 
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(5px); 
+            z-index: 99; 
+            display: none; 
+            opacity: 0;
             transition: opacity 0.3s ease;
         }
 
         .modal-overlay.active {
-            display: block; opacity: 1;
+            display: block; 
+            opacity: 1;
         }
 
         .review-modal {
-            position: fixed; bottom: -100%; left: 0; width: 100%;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
-            border-radius: 35px 35px 0 0; padding: 30px 25px calc(25px + env(safe-area-inset-bottom));
+            position: fixed; 
+            bottom: -100%; 
+            left: 0; 
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(20px);
+            border-radius: 35px 35px 0 0; 
+            padding: 30px 25px calc(25px + env(safe-area-inset-bottom));
             box-shadow: 0 -15px 40px rgba(0,0,0,0.15);
             transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1);
-            z-index: 100; max-height: 90vh; overflow-y: auto;
+            z-index: 100; 
+            max-height: 90vh; 
+            overflow-y: auto;
         }
 
-        .review-modal.active { bottom: 0; }
+        .review-modal.active { 
+            bottom: 0; 
+        }
 
         .modal-header {
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
             margin-bottom: 25px;
         }
 
         .modal-header h3 {
-            font-size: 22px; color: var(--text-main); font-weight: 800;
+            font-size: 22px; 
+            color: var(--text-main); 
+            font-weight: 800;
         }
 
         .close-btn {
-            background: #F1F5F9; border: none; width: 36px; height: 36px;
-            border-radius: 50%; color: var(--text-muted); font-size: 16px;
-            cursor: pointer; transition: 0.3s;
+            background: #F1F5F9; 
+            border: none; 
+            width: 36px; 
+            height: 36px;
+            border-radius: 50%; 
+            color: var(--text-muted); 
+            font-size: 16px;
+            cursor: pointer; 
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .close-btn:active { background: #E2E8F0; transform: scale(0.9); }
+        .close-btn:active { 
+            background: #E2E8F0; 
+            transform: scale(0.9); 
+        }
 
         /* Rating Selector */
         .rating-selector {
@@ -282,31 +520,44 @@
         }
 
         .rating-selector label {
-            font-size: 14px; font-weight: 700; color: var(--text-main);
-            display: block; margin-bottom: 10px;
+            font-size: 14px; 
+            font-weight: 700; 
+            color: var(--text-main);
+            display: block; 
+            margin-bottom: 10px;
         }
 
         .star-input {
-            display: flex; gap: 8px; font-size: 28px;
+            display: flex; 
+            gap: 12px; 
+            font-size: 32px;
+            justify-content: flex-start;
         }
 
         .star-input i {
-            cursor: pointer; transition: all 0.2s;
+            cursor: pointer; 
+            transition: all 0.2s;
             color: #E5E7EB;
         }
 
         .star-input i:hover,
         .star-input i.selected {
             color: #FCD34D;
-            transform: scale(1.2);
+            transform: scale(1.2) rotate(10deg);
         }
 
         /* Form Inputs */
         .custom-input {
-            width: 100%; padding: 14px 16px; background: white;
-            border: 1.5px solid #E2E8F0; border-radius: 12px;
-            font-size: 14px; outline: none; transition: 0.3s;
-            margin-bottom: 15px; font-family: inherit;
+            width: 100%; 
+            padding: 14px 16px; 
+            background: white;
+            border: 1.5px solid #E2E8F0; 
+            border-radius: 12px;
+            font-size: 14px; 
+            outline: none; 
+            transition: 0.3s;
+            margin-bottom: 15px; 
+            font-family: inherit;
         }
 
         .custom-input:focus {
@@ -314,74 +565,194 @@
             box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
         }
 
-        .custom-input::placeholder { color: #94A3B8; }
+        .custom-input::placeholder { 
+            color: #94A3B8; 
+        }
 
         /* Submit Button */
         .submit-review-btn {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white; width: 100%; padding: 14px; border: none;
-            border-radius: 12px; font-size: 15px; font-weight: 700;
-            cursor: pointer; box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+            color: white; 
+            width: 100%; 
+            padding: 14px; 
+            border: none;
+            border-radius: 12px; 
+            font-size: 15px; 
+            font-weight: 700;
+            cursor: pointer; 
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .submit-review-btn:active { transform: scale(0.98); }
-        .submit-review-btn:disabled { background: #CBD5E1; cursor: not-allowed; }
+        .submit-review-btn:active { 
+            transform: scale(0.98); 
+        }
+
+        .submit-review-btn:disabled { 
+            background: #CBD5E1; 
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
 
         /* Empty State */
         .empty-state {
-            text-align: center; color: var(--text-muted);
-            padding: 40px 20px; animation: slideIn 0.5s;
+            text-align: center; 
+            color: var(--text-muted);
+            padding: 40px 20px; 
+            animation: slideIn 0.5s;
         }
 
-        .empty-state i { font-size: 50px; color: #CBD5E1; margin-bottom: 12px; }
+        .empty-state i { 
+            font-size: 50px; 
+            color: #CBD5E1; 
+            margin-bottom: 12px; 
+        }
 
         /* Toast */
         #toast-container {
-            position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
-            width: 90%; z-index: 300; display: flex; flex-direction: column; gap: 12px;
+            position: fixed; 
+            top: 80px; 
+            left: 50%; 
+            transform: translateX(-50%);
+            width: 90%; 
+            z-index: 300; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px;
         }
 
         .toast {
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px);
-            color: white; padding: 14px 20px; border-radius: 12px; font-size: 13px;
-            font-weight: 600; display: flex; align-items: center; gap: 8px;
+            background: rgba(15, 23, 42, 0.95); 
+            backdrop-filter: blur(10px);
+            color: white; 
+            padding: 14px 20px; 
+            border-radius: 12px; 
+            font-size: 13px;
+            font-weight: 600; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px;
             animation: slideIn 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
-        .toast.error { background: rgba(239, 68, 68, 0.95); }
+        .toast.error { 
+            background: rgba(239, 68, 68, 0.95); 
+        }
+
+        .toast.success {
+            background: rgba(16, 185, 129, 0.95);
+        }
 
         /* Bottom Navigation */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 100%; max-width: 420px; margin: 0 auto;
-            background: var(--glass-bg); backdrop-filter: blur(20px);
-            display: flex; justify-content: space-around;
-            padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
-            border-radius: 30px 30px 0 0; box-shadow: 0 -10px 25px rgba(0,0,0,0.06);
-            z-index: 50; border-top: 1px solid rgba(255,255,255,0.8);
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%;
+            background: var(--glass-bg); 
+            backdrop-filter: blur(20px);
+            display: flex; 
+            justify-content: space-around;
+            padding: 15px 0 calc(15px + env(safe-area-inset-bottom));
+            border-radius: 30px 30px 0 0; 
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.06);
+            z-index: 50; 
+            border-top: 1px solid rgba(255,255,255,0.8);
         }
 
         .nav-item {
-            text-align: center; color: var(--text-muted); cursor: pointer;
-            flex: 1; font-size: 12px; font-weight: 600; transition: all 0.3s;
+            text-align: center; 
+            color: var(--text-muted); 
+            cursor: pointer;
+            flex: 1; 
+            font-size: 12px; 
+            font-weight: 600; 
+            transition: all 0.3s;
         }
 
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-        .nav-item.active { color: var(--primary); }
-        .nav-item.active i { transform: translateY(-3px) scale(1.1); }
+        .nav-item i { 
+            font-size: 20px; 
+            display: block; 
+            margin-bottom: 4px;
+            transition: 0.3s;
+        }
+
+        .nav-item.active { 
+            color: var(--primary); 
+        }
+
+        .nav-item.active i { 
+            transform: translateY(-3px) scale(1.1); 
+        }
 
         /* Verified Badge */
         .verified-badge {
-            display: inline-flex; align-items: center; gap: 4px;
-            background: rgba(16, 185, 129, 0.15); color: var(--primary);
-            padding: 4px 8px; border-radius: 6px; font-size: 11px;
+            display: inline-flex; 
+            align-items: center; 
+            gap: 4px;
+            background: rgba(16, 185, 129, 0.15); 
+            color: var(--primary);
+            padding: 4px 8px; 
+            border-radius: 6px; 
+            font-size: 11px;
             font-weight: 700;
         }
 
+        .helpful-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Sorting */
+        .sort-wrapper {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .sort-select {
+            padding: 8px 12px;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            background: white;
+            color: var(--text-main);
+            cursor: pointer;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .sort-select:focus {
+            border-color: var(--primary);
+        }
+
         @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr; }
-            .review-modal { padding: 25px 20px; }
+            .stats-grid { 
+                grid-template-columns: 1fr; 
+            }
+            .review-modal { 
+                padding: 25px 20px; 
+            }
+            #app-container {
+                max-width: 100%;
+                margin: 0;
+                border-radius: 0;
+                height: 100vh;
+            }
         }
     </style>
 </head>
@@ -390,17 +761,32 @@
 <div id="app-container">
     <div class="header">
         <div><i class="fa-solid fa-star" style="margin-right: 8px;"></i> Reviews</div>
-        <button onclick="goBack()"><i class="fa-solid fa-arrow-left"></i></button>
+        <button onclick="goBack()" title="Go Back"><i class="fa-solid fa-arrow-left"></i></button>
     </div>
 
     <div id="toast-container"></div>
 
     <div class="main-content">
         <!-- Product Selection -->
-        <div class="section-title"><i class="fa-solid fa-box"></i> Select Product</div>
-        <select id="product-select" class="custom-input" style="margin-bottom: 20px;">
-            <option value="">Choose a product to view reviews...</option>
-        </select>
+        <div id="products-list-container" style="display: none;">
+            <div class="section-title"><i class="fa-solid fa-boxes-stacked"></i> Choose Product</div>
+            <div id="products-grid"></div>
+        </div>
+
+        <!-- Selected Product Display -->
+        <div id="selected-product-container" style="display: none;">
+            <div id="selected-product-card" class="product-selector-card" onclick="changeProduct()">
+                <div class="product-icon" id="selected-product-icon"></div>
+                <div class="product-info">
+                    <div class="product-name" id="selected-product-name">Loading...</div>
+                    <div class="product-rating-mini">
+                        <i class="fa-solid fa-star" style="color: #FCD34D;"></i>
+                        <span id="selected-product-rating">0</span> • <span id="selected-product-count">0 reviews</span>
+                    </div>
+                </div>
+                <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 14px;"></i>
+            </div>
+        </div>
 
         <!-- Review Stats Card -->
         <div id="stats-card" class="stats-container" style="display: none;">
@@ -408,56 +794,56 @@
                 <div class="big-rating" id="avg-rating">4.5</div>
                 <div>
                     <div class="stars-container">
-                        <i class="fa-solid fa-star star" id="star1"></i>
-                        <i class="fa-solid fa-star star" id="star2"></i>
-                        <i class="fa-solid fa-star star" id="star3"></i>
-                        <i class="fa-solid fa-star star" id="star4"></i>
-                        <i class="fa-solid fa-star star" id="star5"></i>
+                        <i class="fa-solid fa-star star"></i>
+                        <i class="fa-solid fa-star star"></i>
+                        <i class="fa-solid fa-star star"></i>
+                        <i class="fa-solid fa-star star"></i>
+                        <i class="fa-solid fa-star star"></i>
                     </div>
-                    <small id="total-reviews">Based on 24 reviews</small>
+                    <small id="total-reviews" style="font-size: 12px; color: var(--text-muted); display: block; margin-top: 4px;">Based on 0 reviews</small>
                 </div>
             </div>
 
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-number" id="stat-5star">12</div>
+                    <div class="stat-number" id="stat-5star">0</div>
                     <div class="stat-label">5 Star</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number" id="stat-4star">8</div>
+                    <div class="stat-number" id="stat-4star">0</div>
                     <div class="stat-label">4 Star</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number" id="stat-3star">3</div>
+                    <div class="stat-number" id="stat-3star">0</div>
                     <div class="stat-label">3 Star</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number" id="stat-below3">1</div>
-                    <div class="stat-label">Below 3 Star</div>
+                    <div class="stat-number" id="stat-below3">0</div>
+                    <div class="stat-label">Below 3 ★</div>
                 </div>
             </div>
 
             <!-- Rating Breakdown -->
             <div style="margin-top: 15px;">
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                    <span style="font-size: 12px; font-weight: 700; color: var(--text-main); width: 50px;">5 <i class="fa-solid fa-star" style="color: #FCD34D; margin-left: 3px;"></i></span>
-                    <div class="rating-bar"><div class="rating-fill" style="width: 50%;"></div></div>
-                    <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">50%</span>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-main); width: 35px;">5 ★</span>
+                    <div class="rating-bar"><div class="rating-fill" id="bar-5" style="width: 0%;"></div></div>
+                    <span style="font-size: 11px; font-weight: 700; color: var(--text-muted);" id="pct-5">0%</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                    <span style="font-size: 12px; font-weight: 700; color: var(--text-main); width: 50px;">4 <i class="fa-solid fa-star" style="color: #FCD34D; margin-left: 3px;"></i></span>
-                    <div class="rating-bar"><div class="rating-fill" style="width: 33%;"></div></div>
-                    <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">33%</span>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-main); width: 35px;">4 ★</span>
+                    <div class="rating-bar"><div class="rating-fill" id="bar-4" style="width: 0%;"></div></div>
+                    <span style="font-size: 11px; font-weight: 700; color: var(--text-muted);" id="pct-4">0%</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                    <span style="font-size: 12px; font-weight: 700; color: var(--text-main); width: 50px;">3 <i class="fa-solid fa-star" style="color: #FCD34D; margin-left: 3px;"></i></span>
-                    <div class="rating-bar"><div class="rating-fill" style="width: 13%;"></div></div>
-                    <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">13%</span>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-main); width: 35px;">3 ★</span>
+                    <div class="rating-bar"><div class="rating-fill" id="bar-3" style="width: 0%;"></div></div>
+                    <span style="font-size: 11px; font-weight: 700; color: var(--text-muted);" id="pct-3">0%</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 12px; font-weight: 700; color: var(--text-main); width: 50px;">Below 3 <i class="fa-solid fa-star" style="color: #FCD34D; margin-left: 3px;"></i></span>
-                    <div class="rating-bar"><div class="rating-fill" style="width: 4%;"></div></div>
-                    <span style="font-size: 12px; font-weight: 700; color: var(--text-muted);">4%</span>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--text-main); width: 35px;">&lt;3 ★</span>
+                    <div class="rating-bar"><div class="rating-fill" id="bar-below3" style="width: 0%;"></div></div>
+                    <span style="font-size: 11px; font-weight: 700; color: var(--text-muted);" id="pct-below3">0%</span>
                 </div>
             </div>
         </div>
@@ -467,16 +853,28 @@
             <i class="fa-solid fa-pen-to-square"></i> Write a Review
         </button>
 
-        <!-- Filter & Sort -->
-        <div class="filter-bar" id="filter-bar" style="display: none;">
-            <button class="filter-tag active" onclick="filterReviews('all')">All Reviews</button>
-            <button class="filter-tag" onclick="filterReviews(5)"><i class="fa-solid fa-star"></i> 5 Star</button>
-            <button class="filter-tag" onclick="filterReviews(4)"><i class="fa-solid fa-star"></i> 4 Star</button>
-            <button class="filter-tag" onclick="filterReviews(3)"><i class="fa-solid fa-star"></i> 3 Star</button>
+        <!-- Sort & Filter -->
+        <div style="display: none;" id="controls-container">
+            <div class="sort-wrapper">
+                <select class="sort-select" id="sort-select" onchange="changeSortOrder()">
+                    <option value="newest">Newest First</option>
+                    <option value="helpful">Most Helpful</option>
+                    <option value="highest">Highest Rated</option>
+                    <option value="lowest">Lowest Rated</option>
+                </select>
+            </div>
+
+            <div class="filter-bar" id="filter-bar">
+                <button class="filter-tag active" onclick="filterReviews('all')">All</button>
+                <button class="filter-tag" onclick="filterReviews(5)"><i class="fa-solid fa-star"></i> 5★</button>
+                <button class="filter-tag" onclick="filterReviews(4)"><i class="fa-solid fa-star"></i> 4★</button>
+                <button class="filter-tag" onclick="filterReviews(3)"><i class="fa-solid fa-star"></i> 3★</button>
+                <button class="filter-tag" onclick="filterReviews('verified')"><i class="fa-solid fa-check"></i> Verified</button>
+            </div>
         </div>
 
         <!-- Reviews List -->
-        <div class="section-title" id="reviews-title" style="display: none;">
+        <div class="section-title" id="reviews-title" style="display: none; margin-top: 20px;">
             <i class="fa-solid fa-comments"></i> Customer Reviews
         </div>
         <div id="reviews-container"></div>
@@ -495,11 +893,11 @@
             <div class="rating-selector">
                 <label>Rate this product <span style="color: var(--danger);">*</span></label>
                 <div class="star-input" id="star-input">
-                    <i class="fa-solid fa-star" data-rating="1"></i>
-                    <i class="fa-solid fa-star" data-rating="2"></i>
-                    <i class="fa-solid fa-star" data-rating="3"></i>
-                    <i class="fa-solid fa-star" data-rating="4"></i>
-                    <i class="fa-solid fa-star" data-rating="5"></i>
+                    <i class="fa-solid fa-star" data-rating="1" title="1 Star"></i>
+                    <i class="fa-solid fa-star" data-rating="2" title="2 Stars"></i>
+                    <i class="fa-solid fa-star" data-rating="3" title="3 Stars"></i>
+                    <i class="fa-solid fa-star" data-rating="4" title="4 Stars"></i>
+                    <i class="fa-solid fa-star" data-rating="5" title="5 Stars"></i>
                 </div>
                 <input type="hidden" id="selected-rating" value="0">
             </div>
@@ -507,34 +905,52 @@
             <!-- Title -->
             <div>
                 <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px;">Review Title <span style="color: var(--danger);">*</span></label>
-                <input type="text" id="review-title" class="custom-input" placeholder="e.g., Amazing quality!" required>
+                <input type="text" id="review-title" class="custom-input" placeholder="Summarize your experience..." maxlength="100" required>
             </div>
 
             <!-- Review Text -->
             <div>
-                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px;">Review Details <span style="color: var(--danger);">*</span></label>
-                <textarea id="review-text" class="custom-input" placeholder="Share your experience with this product..." style="height: 100px; resize: none;" required></textarea>
+                <label style="display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px;">Your Review <span style="color: var(--danger);">*</span></label>
+                <textarea id="review-text" class="custom-input" placeholder="Share your honest experience..." style="height: 100px; resize: none;" maxlength="500" required></textarea>
+                <small style="color: var(--text-muted); font-size: 11px;">Max 500 characters</small>
             </div>
 
             <!-- Verified Purchase -->
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                <input type="checkbox" id="verified-check" style="width: 18px; height: 18px; cursor: pointer;">
-                <label style="font-size: 13px; color: var(--text-muted); cursor: pointer;">
-                    I have purchased this product <span class="verified-badge"><i class="fa-solid fa-check"></i> Verified</span>
+                <input type="checkbox" id="verified-check" style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);">
+                <label style="font-size: 13px; color: var(--text-muted); cursor: pointer; margin: 0;">
+                    I have purchased this product
                 </label>
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="submit-review-btn">
-                <i class="fa-solid fa-paper-plane"></i> Submit Review
+            <button type="submit" class="submit-review-btn" id="submit-btn">
+                <i class="fa-solid fa-paper-plane"></i> <span id="submit-text">Submit Review</span>
             </button>
         </form>
     </div>
 
+    <!-- Product Selection Modal -->
+    <div class="modal-overlay" id="product-modal-overlay" onclick="closeProductModal()"></div>
+    <div class="review-modal" id="product-modal">
+        <div class="modal-header">
+            <h3>Select a Product</h3>
+            <button class="close-btn" onclick="closeProductModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="products-modal-list"></div>
+    </div>
+
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <div class="nav-item" onclick="goBack()"><i class="fa-solid fa-arrow-left"></i> Back</div>
-        <div class="nav-item active"><i class="fa-solid fa-star"></i> Reviews</div>
+        <div class="nav-item" onclick="goBack()">
+            <i class="fa-solid fa-arrow-left"></i> Back
+        </div>
+        <div class="nav-item active">
+            <i class="fa-solid fa-star"></i> Reviews
+        </div>
+        <div class="nav-item" onclick="scrollToTop()">
+            <i class="fa-solid fa-arrow-up"></i> Top
+        </div>
     </div>
 </div>
 
@@ -544,7 +960,7 @@
         getAuth, onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
     import { 
-        getFirestore, collection, addDoc, onSnapshot, query, where, updateDoc, doc, increment
+        getFirestore, collection, addDoc, onSnapshot, query, where, updateDoc, doc, increment, orderBy
     } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -563,23 +979,37 @@
 
     let currentUser = null;
     let selectedProductId = null;
+    let allProducts = [];
     let allReviews = [];
     let selectedRating = 0;
     let filteredRating = 'all';
+    let sortOrder = 'newest';
+    let helpfulReviews = new Set();
 
     // --- Toast Notification ---
     window.showToast = function(msg, type = 'success') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
-        toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-triangle-exclamation'}"></i> ${msg}`;
+        toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : (type === 'error' ? 'fa-circle-exclamation' : 'fa-info-circle')}"></i> ${msg}`;
         container.appendChild(toast);
-        setTimeout(() => { toast.remove(); }, 3500);
+        setTimeout(() => { 
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-20px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 
-    // --- Go Back ---
+    window.scrollToTop = function() {
+        document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     window.goBack = function() {
-        window.location.href = 'index.html';
+        window.location.href = '/index.html';
+    }
+
+    window.changeProduct = function() {
+        openProductModal();
     }
 
     // --- Auth State ---
@@ -588,41 +1018,91 @@
     });
 
     // --- Load Products ---
-    async function loadProducts() {
+    function loadProducts() {
         const q = query(collection(db, "products"));
         onSnapshot(q, (snapshot) => {
-            const select = document.getElementById('product-select');
-            select.innerHTML = '<option value="">Choose a product to view reviews...</option>';
+            allProducts = [];
+            const productsGrid = document.getElementById('products-grid');
+            const productsList = document.getElementById('products-modal-list');
             
+            productsGrid.innerHTML = '';
+            productsList.innerHTML = '';
+
+            if (snapshot.empty) {
+                productsGrid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><i class="fa-solid fa-box-open"></i><p>No products available</p></div>';
+                return;
+            }
+
             snapshot.forEach((doc) => {
                 const p = { id: doc.id, ...doc.data() };
-                const option = document.createElement('option');
-                option.value = p.id;
-                option.textContent = p.name || 'Unknown Product';
-                select.appendChild(option);
+                allProducts.push(p);
+
+                const productCard = document.createElement('div');
+                productCard.className = 'product-selector-card';
+                productCard.style.cursor = 'pointer';
+                productCard.onclick = () => selectProduct(p.id);
+                productCard.innerHTML = `
+                    <div class="product-icon"><i class="${p.icon || 'fa-solid fa-box'}"></i></div>
+                    <div class="product-info" style="flex: 1;">
+                        <div class="product-name">${p.name || 'Product'}</div>
+                        <small style="color: var(--text-muted); font-size: 12px;">৳${p.price || 0}</small>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color: var(--text-muted); font-size: 14px;"></i>
+                `;
+                productsGrid.appendChild(productCard);
+
+                const modalCard = document.createElement('div');
+                modalCard.className = 'product-selector-card';
+                modalCard.style.cursor = 'pointer';
+                modalCard.onclick = () => {
+                    selectProduct(p.id);
+                    closeProductModal();
+                };
+                modalCard.innerHTML = `
+                    <div class="product-icon"><i class="${p.icon || 'fa-solid fa-box'}"></i></div>
+                    <div class="product-info" style="flex: 1;">
+                        <div class="product-name">${p.name || 'Product'}</div>
+                        <small style="color: var(--text-muted); font-size: 12px;">৳${p.price || 0}</small>
+                    </div>
+                `;
+                productsList.appendChild(modalCard);
             });
         });
     }
 
-    // --- Product Selection ---
-    document.getElementById('product-select').addEventListener('change', function() {
-        selectedProductId = this.value;
+    window.selectProduct = function(productId) {
+        selectedProductId = productId;
         filteredRating = 'all';
+        sortOrder = 'newest';
+        document.getElementById('sort-select').value = 'newest';
         
-        if (selectedProductId) {
-            loadReviews();
-            document.getElementById('stats-card').style.display = 'block';
-            document.getElementById('write-review-btn').style.display = 'flex';
-            document.getElementById('filter-bar').style.display = 'flex';
-            document.getElementById('reviews-title').style.display = 'flex';
-        } else {
-            document.getElementById('stats-card').style.display = 'none';
-            document.getElementById('write-review-btn').style.display = 'none';
-            document.getElementById('filter-bar').style.display = 'none';
-            document.getElementById('reviews-title').style.display = 'none';
-            document.getElementById('reviews-container').innerHTML = '';
+        const product = allProducts.find(p => p.id === productId);
+        if (product) {
+            document.getElementById('selected-product-icon').innerHTML = `<i class="${product.icon || 'fa-solid fa-box'}"></i>`;
+            document.getElementById('selected-product-name').textContent = product.name || 'Product';
+            document.getElementById('selected-product-card').style.cursor = 'pointer';
         }
-    });
+
+        document.getElementById('products-list-container').style.display = 'none';
+        document.getElementById('selected-product-container').style.display = 'block';
+        document.getElementById('stats-card').style.display = 'block';
+        document.getElementById('write-review-btn').style.display = 'flex';
+        document.getElementById('controls-container').style.display = 'block';
+        document.getElementById('reviews-title').style.display = 'flex';
+        
+        loadReviews();
+        scrollToTop();
+    }
+
+    window.openProductModal = function() {
+        document.getElementById('product-modal-overlay').classList.add('active');
+        document.getElementById('product-modal').classList.add('active');
+    }
+
+    window.closeProductModal = function() {
+        document.getElementById('product-modal-overlay').classList.remove('active');
+        document.getElementById('product-modal').classList.remove('active');
+    }
 
     // --- Load & Render Reviews ---
     function loadReviews() {
@@ -635,8 +1115,6 @@
                 allReviews.push({ id: doc.id, ...doc.data() });
             });
 
-            allReviews.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            
             updateStats();
             renderReviews();
         });
@@ -658,20 +1136,45 @@
 
         document.getElementById('avg-rating').textContent = avgRating;
         document.getElementById('total-reviews').textContent = `Based on ${total} review${total !== 1 ? 's' : ''}`;
+        document.getElementById('selected-product-rating').textContent = avgRating;
+        document.getElementById('selected-product-count').textContent = `${total} review${total !== 1 ? 's' : ''}`;
 
         // Update stars
-        for (let i = 1; i <= 5; i++) {
-            const star = document.getElementById(`star${i}`);
-            star.classList.toggle('empty', i > Math.round(avgRating));
-        }
+        const stars = document.querySelectorAll('#stats-card .stars-container .star');
+        stars.forEach((star, idx) => {
+            star.classList.toggle('empty', idx >= Math.round(avgRating));
+        });
 
         document.getElementById('stat-5star').textContent = ratings[5];
         document.getElementById('stat-4star').textContent = ratings[4];
         document.getElementById('stat-3star').textContent = ratings[3];
         document.getElementById('stat-below3').textContent = ratings.below3;
+
+        // Update rating bars
+        const percentages = {
+            5: total > 0 ? Math.round((ratings[5] / total) * 100) : 0,
+            4: total > 0 ? Math.round((ratings[4] / total) * 100) : 0,
+            3: total > 0 ? Math.round((ratings[3] / total) * 100) : 0,
+            below3: total > 0 ? Math.round((ratings.below3 / total) * 100) : 0
+        };
+
+        document.getElementById('bar-5').style.width = percentages[5] + '%';
+        document.getElementById('bar-4').style.width = percentages[4] + '%';
+        document.getElementById('bar-3').style.width = percentages[3] + '%';
+        document.getElementById('bar-below3').style.width = percentages.below3 + '%';
+
+        document.getElementById('pct-5').textContent = percentages[5] + '%';
+        document.getElementById('pct-4').textContent = percentages[4] + '%';
+        document.getElementById('pct-3').textContent = percentages[3] + '%';
+        document.getElementById('pct-below3').textContent = percentages.below3 + '%';
     }
 
-    // --- Filter Reviews ---
+    // --- Sort & Filter ---
+    window.changeSortOrder = function() {
+        sortOrder = document.getElementById('sort-select').value;
+        renderReviews();
+    }
+
     window.filterReviews = function(rating) {
         filteredRating = rating;
         
@@ -687,16 +1190,34 @@
     function renderReviews() {
         const container = document.getElementById('reviews-container');
         
-        let filtered = filteredRating === 'all' 
-            ? allReviews 
-            : allReviews.filter(r => r.rating === filteredRating);
+        let filtered = allReviews;
+
+        // Apply rating filter
+        if (filteredRating !== 'all') {
+            if (filteredRating === 'verified') {
+                filtered = filtered.filter(r => r.isVerified);
+            } else {
+                filtered = filtered.filter(r => r.rating === filteredRating);
+            }
+        }
+
+        // Apply sorting
+        if (sortOrder === 'helpful') {
+            filtered.sort((a, b) => (b.helpful || 0) - (a.helpful || 0));
+        } else if (sortOrder === 'highest') {
+            filtered.sort((a, b) => b.rating - a.rating);
+        } else if (sortOrder === 'lowest') {
+            filtered.sort((a, b) => a.rating - b.rating);
+        } else {
+            filtered.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        }
 
         if (filtered.length === 0) {
             container.innerHTML = `
                 <div class="empty-state">
                     <i class="fa-solid fa-inbox"></i>
-                    <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 5px;">No reviews yet</h3>
-                    <p style="font-size: 12px;">Be the first to review this product!</p>
+                    <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 5px; color: var(--text-main);">No reviews found</h3>
+                    <p style="font-size: 12px;">Be the first to share your experience!</p>
                 </div>`;
             return;
         }
@@ -705,6 +1226,7 @@
             const date = new Date(review.timestamp);
             const timeStr = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
             const initials = (review.userName || 'U').substring(0, 2).toUpperCase();
+            const isHelpful = helpfulReviews.has(review.id);
 
             return `
                 <div class="review-item">
@@ -717,7 +1239,7 @@
                             </div>
                         </div>
                         <div class="review-rating">
-                            ${[1,2,3,4,5].map(i => `<i class="fa-solid fa-star star ${i <= review.rating ? '' : 'empty'}"></i>`).join('')}
+                            ${[1,2,3,4,5].map(i => `<i class="fa-solid fa-star star ${i <= review.rating ? '' : 'empty'}" style="font-size: 13px;"></i>`).join('')}
                         </div>
                     </div>
 
@@ -726,12 +1248,12 @@
 
                     <div class="review-meta">
                         ${review.isVerified ? '<span class="verified-badge"><i class="fa-solid fa-check"></i> Verified Purchase</span>' : ''}
-                        ${review.helpful ? `<span><i class="fa-solid fa-thumbs-up"></i> ${review.helpful} found helpful</span>` : ''}
+                        ${review.helpful && review.helpful > 0 ? `<span class="helpful-count"><i class="fa-solid fa-thumbs-up"></i> ${review.helpful}</span>` : ''}
                     </div>
 
                     <div class="review-helpful">
-                        <button class="helpful-btn" onclick="markHelpful('${review.id}')">
-                            <i class="fa-solid fa-thumbs-up"></i> Helpful
+                        <button class="helpful-btn ${isHelpful ? 'active' : ''}" onclick="markHelpful('${review.id}')">
+                            <i class="fa-solid fa-thumbs-up"></i> Helpful (${review.helpful || 0})
                         </button>
                         <button class="helpful-btn" onclick="reportReview('${review.id}')">
                             <i class="fa-solid fa-flag"></i> Report
@@ -756,13 +1278,40 @@
                 }
             });
         });
+
+        star.addEventListener('mouseover', function() {
+            const hoverRating = parseInt(this.dataset.rating);
+            document.querySelectorAll('#star-input i').forEach((s, idx) => {
+                if (idx < hoverRating) {
+                    s.style.color = '#FCD34D';
+                } else {
+                    s.style.color = '#E5E7EB';
+                }
+            });
+        });
+    });
+
+    document.getElementById('star-input').addEventListener('mouseout', function() {
+        document.querySelectorAll('#star-input i').forEach((s, idx) => {
+            if (idx < selectedRating) {
+                s.classList.add('selected');
+                s.style.color = '#FCD34D';
+            } else {
+                s.classList.remove('selected');
+                s.style.color = '#E5E7EB';
+            }
+        });
     });
 
     // --- Open Review Modal ---
     window.openReviewModal = function() {
         if (!currentUser) {
-            showToast("Please login to write a review", "error");
+            showToast("Please login first", "error");
             setTimeout(() => window.location.href = 'index.html', 1500);
+            return;
+        }
+        if (!selectedProductId) {
+            showToast("Please select a product first", "error");
             return;
         }
         document.getElementById('review-overlay').classList.add('active');
@@ -783,9 +1332,18 @@
             return;
         }
 
-        const title = document.getElementById('review-title').value;
-        const text = document.getElementById('review-text').value;
+        const title = document.getElementById('review-title').value.trim();
+        const text = document.getElementById('review-text').value.trim();
         const isVerified = document.getElementById('verified-check').checked;
+
+        if (!title || !text) {
+            showToast("Please fill in all fields", "error");
+            return;
+        }
+
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.disabled = true;
+        document.getElementById('submit-text').textContent = 'Submitting...';
 
         try {
             await addDoc(collection(db, "reviews"), {
@@ -800,24 +1358,42 @@
                 timestamp: new Date().toISOString()
             });
 
-            showToast("Review submitted successfully!");
+            showToast("Review published successfully! 🎉");
             document.getElementById('review-form').reset();
             selectedRating = 0;
-            closeReviewModal();
-            loadReviews();
+            document.querySelectorAll('#star-input i').forEach(s => s.classList.remove('selected'));
+            
+            setTimeout(() => {
+                closeReviewModal();
+                loadReviews();
+            }, 1000);
         } catch (error) {
             showToast("Failed to submit review", "error");
             console.error(error);
+        } finally {
+            submitBtn.disabled = false;
+            document.getElementById('submit-text').textContent = 'Submit Review';
         }
     }
 
     // --- Mark Helpful ---
     window.markHelpful = async function(reviewId) {
+        if (!currentUser) {
+            showToast("Please login first", "error");
+            return;
+        }
+
+        if (helpfulReviews.has(reviewId)) {
+            showToast("You already marked this as helpful");
+            return;
+        }
+
         try {
             const reviewRef = doc(db, "reviews", reviewId);
             await updateDoc(reviewRef, {
                 helpful: increment(1)
             });
+            helpfulReviews.add(reviewId);
             loadReviews();
         } catch (error) {
             showToast("Failed to mark helpful", "error");
@@ -826,10 +1402,15 @@
 
     // --- Report Review ---
     window.reportReview = function(reviewId) {
-        showToast("Review reported successfully");
+        if (!currentUser) {
+            showToast("Please login first", "error");
+            return;
+        }
+        showToast("Thank you! We'll review this report");
     }
 
     // Initialize
+    document.getElementById('products-list-container').style.display = 'block';
     loadProducts();
 </script>
 
