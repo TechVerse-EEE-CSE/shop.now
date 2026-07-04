@@ -1,0 +1,34 @@
+.category-rail {
+    display: flex;
+    gap: 9px;
+    overflow-x: auto;
+    padding-bottom: 14px;
+    margin-bottom: 6px;
+    scrollbar-width: none;
+}
+.category-rail::-webkit-scrollbar { display: none; }
+
+.category-chip {
+    flex: 0 0 auto;
+    padding: 9px 16px;
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    transition: 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+.category-chip i { font-size: 12px; }
+.category-chip.active {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: #fff;
+    box-shadow: 0 6px 14px -4px rgba(15,110,98,0.5);
+}
+.category-chip:active { transform: scale(0.94); }
