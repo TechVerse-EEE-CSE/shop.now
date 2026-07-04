@@ -1,0 +1,9 @@
+.toast {
+    background: rgba(22,33,29,0.95); backdrop-filter: blur(10px); color: #fff;
+    padding: 13px 18px; border-radius: var(--radius-sm); font-size: 13.5px; font-weight: 600;
+    display: flex; align-items: center; gap: 11px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    animation: toastEnter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.toast.error { background: rgba(230,83,60,0.95); }
+.toast.success i { color: var(--amber); }
+@keyframes toastEnter { from { opacity: 0; transform: translateY(-25px); } to { opacity: 1; transform: translateY(0); } }
