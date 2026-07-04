@@ -1,0 +1,10 @@
+.support-card {
+    display: flex; align-items: center; gap: 14px; cursor: pointer; padding: 14px;
+    background: #fff; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0,0,0,0.03); margin-bottom: 10px; transition: 0.25s;
+}
+.support-card:active { transform: scale(0.97); }
+.support-icon { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 19px; color: #fff; flex: 0 0 auto; }
+.support-title { font-weight: 800; color: var(--ink); font-size: 14.5px; }
+.support-sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+.support-arrow { color: var(--muted-soft); font-size: 13px; margin-left: auto; }
