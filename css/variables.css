@@ -1,0 +1,29 @@
+/* ==========================================================
+   Design tokens — ShopVerse
+   Palette: deep teal + warm amber + coral sale accent
+   ========================================================== */
+:root {
+    --ink:            #16211D;
+    --teal:           #0F6E62;
+    --teal-dark:      #0A4F46;
+    --teal-tint:      #E4F4F1;
+    --amber:          #F2A93B;
+    --coral:          #E6533C;
+    --coral-tint:     #FDECE8;
+    --cream:          #FAF8F3;
+    --card-bg:        #FFFFFF;
+    --line:           #EAE5DB;
+    --muted:          #6B7670;
+    --muted-soft:     #98A29C;
+
+    --radius-xs: 8px;
+    --radius-sm: 12px;
+    --radius-md: 18px;
+    --radius-lg: 26px;
+
+    --shadow-sm: 0 3px 10px rgba(22,33,29,0.06);
+    --shadow-md: 0 14px 30px -8px rgba(22,33,29,0.16);
+
+    --font-body: 'Hind Siliguri', sans-serif;
+    --font-display: 'Poppins', 'Hind Siliguri', sans-serif;
+}
